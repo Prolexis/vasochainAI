@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # VasoChain AI
 
 MVP funcional: supervisión y trazabilidad del Programa Vaso de Leche mediante IA, Blockchain, códigos QR y un agente conversacional de WhatsApp.
@@ -129,3 +130,7 @@ vasochain-ai/
 ├── docker-compose.yml
 └── .env.example
 ```
+=======
+# vasochainAI
+Agente autónomo basado en IA, Blockchain y WhatsApp para la supervisión transparente y trazable del Programa Vaso de Leche.
+>>>>>>> 86ca7701554285a719e8840beef5ece2534fa84b
