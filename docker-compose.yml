@@ -1,0 +1,93 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: vasochain-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vasochain}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vasochain}
+      POSTGRES_DB: ${POSTGRES_DB:-vasochain}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vasochain}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - vasochain-net
+
+  hardhat-node:
+    build:
+      context: ./blockchain
+    container_name: vasochain-hardhat
+    restart: unless-stopped
+    ports:
+      - "8545:8545"
+    volumes:
+      - contract_artifacts:/shared
+    healthcheck:
+      test: ["CMD", "test", "-f", "/shared/contract.json"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 10s
+    networks:
+      - vasochain-net
+
+  backend:
+    build:
+      context: ./backend
+    container_name: vasochain-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-vasochain}:${POSTGRES_PASSWORD:-vasochain}@postgres:5432/${POSTGRES_DB:-vasochain}
+      BLOCKCHAIN_RPC_URL: http://hardhat-node:8545
+      CONTRACT_SHARED_PATH: /shared/contract.json
+      PORT: 3000
+    ports:
+      - "3001:3000"
+    volumes:
+      - contract_artifacts:/shared:ro
+      - backend_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      hardhat-node:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - vasochain-net
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
+    container_name: vasochain-frontend
+    restart: unless-stopped
+    ports:
+      - "5174:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - vasochain-net
+
+networks:
+  vasochain-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  contract_artifacts:
+  backend_uploads:

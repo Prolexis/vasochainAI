@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Variables CSS para modo oscuro y claro */
+:root {
+  /* Modo oscuro (predeterminado) */
+  --color-ledger-950: #0a0d0a;
+  --color-ledger-900: #10140f;
+  --color-ledger-800: #181d17;
+  --color-ledger-700: #222922;
+  --color-ledger-600: #323b30;
+  --color-paper-100: #f3efe2;
+  --color-paper-200: #e8e2d2;
+  --color-paper-300: #d8d0ba;
+  --color-seal-400: #d68955;
+  --color-seal-500: #c2703d;
+  --color-seal-600: #9c5527;
+  --color-confirm-300: #8fd4ad;
+  --color-confirm-400: #5fba8c;
+  --color-confirm-500: #3f9a6d;
+  --color-confirm-600: #2d7350;
+  --color-deny-400: #c66552;
+  --color-deny-500: #a8493a;
+  color-scheme: dark;
+}
+
+.light {
+  /* Modo claro */
+  --color-ledger-950: #f8f6ef;
+  --color-ledger-900: #f3efe2;
+  --color-ledger-800: #e8e2d2;
+  --color-ledger-700: #d8d0ba;
+  --color-ledger-600: #b8b09a;
+  --color-paper-100: #0a0d0a;
+  --color-paper-200: #181d17;
+  --color-paper-300: #323b30;
+  --color-seal-400: #b86a30;
+  --color-seal-500: #9c5527;
+  --color-seal-600: #7a411e;
+  --color-confirm-300: #2d7350;
+  --color-confirm-400: #3f9a6d;
+  --color-confirm-500: #5fba8c;
+  --color-confirm-600: #8fd4ad;
+  --color-deny-400: #a8493a;
+  --color-deny-500: #c66552;
+  color-scheme: light;
+}
+
+/* Fondo principal con gradiente dinámico */
+body {
+  background-color: var(--color-ledger-950);
+  color: var(--color-paper-200);
+  background-image: 
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--color-paper-200) 10%, transparent) 1px, transparent 0),
+    radial-gradient(circle at top right, rgba(95, 186, 140, 0.08) 0, transparent 50%),
+    radial-gradient(circle at bottom left, rgba(198, 101, 82, 0.05) 0, transparent 50%);
+  background-size: 22px 22px, auto, auto;
+  background-attachment: fixed;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Selección de texto */
+::selection {
+  background-color: var(--color-confirm-500);
+  color: var(--color-ledger-950);
+}
+
+/* Foco accesible */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-confirm-400);
+  outline-offset: 2px;
+}
+
+/* Scrollbar delgado */
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background-color: var(--color-ledger-600);
+  border-radius: 999px;
+  transition: background-color 0.2s ease;
+}
+.scroll-thin::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-ledger-500);
+}
+
+/* Perforación para recibos */
+.perforated-bottom {
+  position: relative;
+}
+.perforated-bottom::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 8px;
+  background-image: radial-gradient(circle at 6px 0, transparent 5px, var(--color-ledger-950) 5px);
+  background-size: 12px 8px;
+  background-repeat: repeat-x;
+}
+
+/* 2026 Design Enhancements */
+.shadow-soft-xl {
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.35), 0 8px 25px -10px rgba(0, 0, 0, 0.2);
+}
+
+.glass-card {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  background: linear-gradient(135deg, rgba(16, 20, 15, 0.9), rgba(24, 29, 23, 0.7));
+}
+
+.glass-border {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-confirm-300), var(--color-seal-400));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Smooth hover transitions */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+/* Animated gradient border */
+.gradient-border {
+  position: relative;
+  background: linear-gradient(var(--color-ledger-900), var(--color-ledger-900)) padding-box,
+              linear-gradient(135deg, var(--color-confirm-400), var(--color-seal-400), var(--color-deny-400)) border-box;
+}
+
+/* Pulse animation for emphasis */
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+.subtle-pulse {
+  animation: subtle-pulse 3s ease-in-out infinite;
+}
+
+/* Reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

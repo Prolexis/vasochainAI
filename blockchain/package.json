@@ -1,0 +1,14 @@
+{
+  "name": "vasochain-blockchain",
+  "version": "1.0.0",
+  "description": "Nodo Hardhat local y smart contracts para VasoChain AI",
+  "scripts": {
+    "node": "hardhat node --hostname 0.0.0.0",
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.js --network localhost"
+  },
+  "devDependencies": {
+    "hardhat": "^2.22.5",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0"
+  }
+}
