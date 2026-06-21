@@ -93,8 +93,8 @@ export default {
         },
       },
       fontFamily: {
-        display: ['"Spectral"', 'Georgia', 'serif'],
-        body: ['"IBM Plex Sans"', 'system-ui', 'sans-serif'],
+        display: ['"Outfit"', 'system-ui', 'sans-serif'],
+        body: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'monospace'],
       },
       borderRadius: {
@@ -107,7 +107,11 @@ export default {
         'neu-dark-inset': 'inset 4px 4px 8px #060806, inset -4px -4px 8px #0e120e',
         'neu-light': '6px 6px 12px #d8d0ba, -6px -6px 12px #ffffff',
         'neu-light-inset': 'inset 4px 4px 8px #d8d0ba, inset -4px -4px 8px #ffffff',
-        'soft-xl': '0 10px 25px -5px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04)',
+        'soft-xl': '0 20px 40px -15px var(--shadow-color, rgba(0,0,0,0.15))',
+        'glow-emerald': '0 0 25px -5px rgba(16, 185, 129, 0.25), 0 8px 10px -6px rgba(16, 185, 129, 0.2)',
+        'glow-amber': '0 0 25px -5px rgba(245, 158, 11, 0.25), 0 8px 10px -6px rgba(245, 158, 11, 0.2)',
+        'glow-blue': '0 0 25px -5px rgba(59, 130, 246, 0.25), 0 8px 10px -6px rgba(59, 130, 246, 0.2)',
+        'glow-rose': '0 0 25px -5px rgba(244, 63, 94, 0.25), 0 8px 10px -6px rgba(244, 63, 94, 0.2)',
       },
     },
   },

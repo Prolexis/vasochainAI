@@ -2,95 +2,113 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Variables CSS para modo oscuro y claro */
+/* 2026 Design System - VasoChain AI */
+
 :root {
-  /* Modo oscuro (predeterminado) */
-  --color-ledger-950: #0a0d0a;
-  --color-ledger-900: #10140f;
-  --color-ledger-800: #181d17;
-  --color-ledger-700: #222922;
-  --color-ledger-600: #323b30;
-  --color-paper-100: #f3efe2;
-  --color-paper-200: #e8e2d2;
-  --color-paper-300: #d8d0ba;
-  --color-seal-400: #d68955;
-  --color-seal-500: #c2703d;
-  --color-seal-600: #9c5527;
-  --color-confirm-300: #8fd4ad;
-  --color-confirm-400: #5fba8c;
-  --color-confirm-500: #3f9a6d;
-  --color-confirm-600: #2d7350;
-  --color-deny-400: #c66552;
-  --color-deny-500: #a8493a;
+  /* Modo oscuro (predeterminado) - Obsidian & Emerald Cyberpunk */
+  --color-ledger-950: #030504;       /* Fondo súper profundo */
+  --color-ledger-900: #080d0a;       /* Paneles oscuros / Sidebar */
+  --color-ledger-800: #0f1612;       /* Tarjetas elevadas */
+  --color-ledger-700: #1a261f;       /* Bordes muy sutiles */
+  --color-ledger-600: #2b3d33;       /* Bordes de interacción */
+  --color-paper-100: #eaf5ee;        /* Texto de máximo contraste (blanco-menta) */
+  --color-paper-200: #cfe3d6;        /* Texto principal (menta-grisáceo) */
+  --color-paper-300: #8fa697;        /* Texto secundario (apagado) */
+  
+  --color-seal-400: #fbbf24;         /* Sello - Oro brillante */
+  --color-seal-500: #f59e0b;         /* Sello - Ámbar */
+  --color-seal-600: #d97706;         /* Sello - Bronce/Cobre */
+  
+  --color-confirm-300: #34d399;      /* Confirmar - Menta brillante */
+  --color-confirm-400: #10b981;      /* Confirmar - Esmeralda */
+  --color-confirm-500: #059669;      /* Confirmar - Verde base */
+  --color-confirm-600: #047857;      /* Confirmar - Verde oscuro */
+  
+  --color-deny-400: #fb7185;         /* Denegar - Rosa suave */
+  --color-deny-500: #f43f5e;         /* Denegar - Rosa fuerte */
+  
+  --shadow-color: rgba(0, 0, 0, 0.55);
   color-scheme: dark;
 }
 
 .light {
-  /* Modo claro */
-  --color-ledger-950: #f8f6ef;
-  --color-ledger-900: #f3efe2;
-  --color-ledger-800: #e8e2d2;
-  --color-ledger-700: #d8d0ba;
-  --color-ledger-600: #b8b09a;
-  --color-paper-100: #0a0d0a;
-  --color-paper-200: #181d17;
-  --color-paper-300: #323b30;
-  --color-seal-400: #b86a30;
-  --color-seal-500: #9c5527;
-  --color-seal-600: #7a411e;
-  --color-confirm-300: #2d7350;
-  --color-confirm-400: #3f9a6d;
-  --color-confirm-500: #5fba8c;
-  --color-confirm-600: #8fd4ad;
-  --color-deny-400: #a8493a;
-  --color-deny-500: #c66552;
+  /* Modo claro - Premium Warm Paper & Deep Forest */
+  --color-ledger-950: #fbfaf7;       /* Fondo color lino/papel premium */
+  --color-ledger-900: #f4f2ea;       /* Paneles de control / Sidebar */
+  --color-ledger-800: #ffffff;       /* Tarjetas elevadas (blanco puro) */
+  --color-ledger-700: #e3e0d5;       /* Bordes suaves lino */
+  --color-ledger-600: #ccc7b6;       /* Bordes activos */
+  --color-paper-100: #0f1b13;        /* Texto de contraste máximo (bosque oscuro) */
+  --color-paper-200: #25382b;        /* Texto principal */
+  --color-paper-300: #556c5e;        /* Texto secundario */
+  
+  --color-seal-400: #d97706;         /* Sello - Cobre de contraste */
+  --color-seal-500: #c2410c;         /* Sello - Terracota */
+  --color-seal-600: #9a3412;         /* Sello - Rust */
+  
+  --color-confirm-300: #0f766e;      /* Confirmar - Verde azulado */
+  --color-confirm-400: #047857;      /* Confirmar - Verde bosque */
+  --color-confirm-500: #065f46;      /* Confirmar - Bosque profundo */
+  --color-confirm-600: #064e3b;      /* Confirmar - Bosque oscuro */
+  
+  --color-deny-400: #be123c;         /* Denegar - Carmesí */
+  --color-deny-500: #9f1239;         /* Denegar - Vino oscuro */
+  
+  --shadow-color: rgba(22, 31, 25, 0.06);
   color-scheme: light;
 }
 
-/* Fondo principal con gradiente dinámico */
+/* Fondo principal con gradiente dinámico y micro-puntos */
 body {
   background-color: var(--color-ledger-950);
   color: var(--color-paper-200);
   background-image: 
-    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--color-paper-200) 10%, transparent) 1px, transparent 0),
-    radial-gradient(circle at top right, rgba(95, 186, 140, 0.08) 0, transparent 50%),
-    radial-gradient(circle at bottom left, rgba(198, 101, 82, 0.05) 0, transparent 50%);
-  background-size: 22px 22px, auto, auto;
+    radial-gradient(circle at 10% 20%, color-mix(in srgb, var(--color-confirm-500) 3%, transparent) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, color-mix(in srgb, var(--color-seal-500) 3%, transparent) 0%, transparent 45%),
+    radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--color-confirm-400) 4%, transparent) 0%, transparent 45%),
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--color-paper-100) 4%, transparent) 1px, transparent 0);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
   background-attachment: fixed;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              background-image 0.4s ease;
 }
 
-/* Selección de texto */
+/* Selección de texto elegante */
 ::selection {
-  background-color: var(--color-confirm-500);
-  color: var(--color-ledger-950);
+  background-color: color-mix(in srgb, var(--color-confirm-400) 25%, transparent);
+  color: var(--color-paper-100);
 }
 
-/* Foco accesible */
+/* Foco accesible moderno */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
   outline: 2px solid var(--color-confirm-400);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
-/* Scrollbar delgado */
-.scroll-thin::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* Scrollbar premium unificado */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
-.scroll-thin::-webkit-scrollbar-thumb {
-  background-color: var(--color-ledger-600);
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-ledger-600) 40%, transparent);
   border-radius: 999px;
-  transition: background-color 0.2s ease;
+  border: 3px solid var(--color-ledger-950);
 }
-.scroll-thin::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-ledger-500);
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ledger-600);
 }
 
-/* Perforación para recibos */
+/* Recibos perforados */
 .perforated-bottom {
   position: relative;
 }
@@ -106,50 +124,107 @@ textarea:focus-visible {
   background-repeat: repeat-x;
 }
 
-/* 2026 Design Enhancements */
-.shadow-soft-xl {
-  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.35), 0 8px 25px -10px rgba(0, 0, 0, 0.2);
-}
-
+/* Glassmorphism premium 2026 */
 .glass-card {
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  background: linear-gradient(135deg, rgba(16, 20, 15, 0.9), rgba(24, 29, 23, 0.7));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: linear-gradient(
+    135deg, 
+    color-mix(in srgb, var(--color-ledger-800) 80%, transparent), 
+    color-mix(in srgb, var(--color-ledger-900) 50%, transparent)
+  );
+  box-shadow: 0 12px 40px -10px var(--shadow-color);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .glass-border {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid color-mix(in srgb, var(--color-paper-100) 8%, transparent);
 }
 
+/* Efectos de texto con degradado */
 .gradient-text {
   background: linear-gradient(135deg, var(--color-confirm-300), var(--color-seal-400));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-weight: 800;
 }
 
-/* Smooth hover transitions */
+/* Micro-interacción: Elevación al pasar el cursor */
 .hover-lift {
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              border-color 0.3s ease;
 }
 .hover-lift:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px -12px var(--shadow-color);
+  border-color: color-mix(in srgb, var(--color-confirm-400) 40%, transparent);
 }
 
-/* Animated gradient border */
+/* Borde dinámico con gradiente */
 .gradient-border {
   position: relative;
+  border-radius: 24px;
   background: linear-gradient(var(--color-ledger-900), var(--color-ledger-900)) padding-box,
               linear-gradient(135deg, var(--color-confirm-400), var(--color-seal-400), var(--color-deny-400)) border-box;
+  border: 1.5px solid transparent;
 }
 
-/* Pulse animation for emphasis */
+/* Animaciones y transiciones */
 @keyframes subtle-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.85; }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(0.98); }
 }
 .subtle-pulse {
   animation: subtle-pulse 3s ease-in-out infinite;
+}
+
+/* Tablas estilizadas 2026 */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+thead tr {
+  background-color: color-mix(in srgb, var(--color-ledger-900) 60%, transparent);
+}
+th {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-paper-300);
+  border-bottom: 1.5px solid var(--color-ledger-700);
+}
+tbody tr {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+tbody tr:hover {
+  background-color: color-mix(in srgb, var(--color-ledger-800) 60%, transparent);
+}
+td {
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ledger-700) 40%, transparent);
+}
+
+/* Estilos globales para entradas de datos (Inputs, Selects, Textareas) */
+input, select, textarea {
+  background-color: color-mix(in srgb, var(--color-ledger-950) 60%, transparent) !important;
+  border: 1.5px solid var(--color-ledger-700) !important;
+  border-radius: 16px !important;
+  color: var(--color-paper-100) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-confirm-400) !important;
+  background-color: var(--color-ledger-800) !important;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-confirm-400) 15%, transparent) !important;
+  outline: none !important;
+}
+
+/* Efecto para interruptores toggle activos */
+input[type="checkbox"]:checked + div {
+  box-shadow: 0 0 14px color-mix(in srgb, var(--color-confirm-400) 40%, transparent);
 }
 
 /* Reducción de movimiento */

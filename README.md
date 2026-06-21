@@ -1,136 +1,218 @@
-<<<<<<< HEAD
 # VasoChain AI
 
-MVP funcional: supervisión y trazabilidad del Programa Vaso de Leche mediante IA, Blockchain, códigos QR y un agente conversacional de WhatsApp.
+[![GitHub stars](https://img.shields.io/github/stars/tu-usuario/vasochainAI?style=social)](https://github.com/tu-usuario/vasochainAI/stargazers)
+[![GitHub license](https://img.shields.io/github/license/tu-usuario/vasochainAI)](https://github.com/tu-usuario/vasochainAI/blob/main/LICENSE)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://www.docker.com/)
+[![GitHub release](https://img.shields.io/github/v/release/tu-usuario/vasochainAI)](https://github.com/tu-usuario/vasochainAI/releases)
 
-## Stack
+## Resumen Ejecutivo
 
-- **Backend**: NestJS (TypeScript) + Prisma ORM
-- **Base de datos**: PostgreSQL
-- **Blockchain**: nodo Hardhat local (Ethereum) + smart contract `DeliveryRegistry.sol`
-- **IA**: Claude (visión) para validar evidencias fotográficas
-- **WhatsApp**: Twilio WhatsApp Sandbox (Plan B, opcional) + simulador interno (Plan A, principal)
-- **Frontend**: React + Vite + TailwindCSS
+VasoChain AI es un sistema integral de supervisión y trazabilidad para el Programa Vaso de Leche, que combina **Inteligencia Artificial**, **Blockchain** y **WhatsApp** para garantizar transparencia, seguridad y autonomía en la gestión de entregas. El MVP funcional permite validar evidencias fotográficas mediante IA, registrar transacciones de manera inmutable en la blockchain y comunicarse con beneficiarios de forma conversacional a través de WhatsApp.
 
-## Requisitos previos
+## Arquitectura del Proyecto
 
-- Docker y Docker Compose instalados.
-- Una API key de Anthropic (Claude) para que la validación de evidencias funcione. Sin ella, todo el sistema arranca igual, pero las entregas quedarán marcadas como "no validadas" hasta que la configures.
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                          Frontend (React)                       │
+│                    http://localhost:5174                        │
+└────────────────────┬────────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                       Backend (NestJS)                         │
+│                    http://localhost:3001                        │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐        │
+│  │  Auth    │  │Beneficiar│  │ Entregas │  │  Controles│        │
+│  │  Module  │  │   Module │  │  Module  │  │  Module  │        │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘        │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐        │
+│  │Blockchain│  │    IA    │  │ WhatsApp │  │  Prisma  │        │
+│  │  Module  │  │  Module  │  │  Module  │  │  (ORM)   │        │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘        │
+└───────┬───────────────┬───────────────┬────────────────────────┘
+        │               │               │
+        ▼               ▼               ▼
+┌───────────────┐ ┌───────────┐ ┌─────────────────┐
+│   PostgreSQL  │ │ Hardhat   │ │   Anthropic     │
+│   (Docker)    │ │  Node     │ │   Claude API    │
+│ localhost:5433│ │localhost:8545│                 │
+└───────────────┘ └───────────┘ └─────────────────┘
+```
 
-## 1. Configurar variables de entorno
+## Funcionalidades Core
+
+- **Gestión de Beneficiarios**: Registro, edición y eliminación de beneficiarios con generación automática de códigos QR
+- **Simulador WhatsApp**: Pruebas sin dependencias externas
+- **Validación de Evidencias con IA**: Análisis de fotografías mediante Claude con visión
+- **Trazabilidad Blockchain**: Registro inmutable de entregas en un nodo Hardhat local
+- **Panel de Control**: Dashboard interactivo con métricas y seguimiento en tiempo real
+- **Gestión de Controles**: Sistema de controles y documentación para auditorías
+- **WhatsApp Real (Opcional)**: Integración con Twilio WhatsApp Sandbox
+
+## Stack Tecnológico
+
+| Componente          | Tecnologías                                                                 |
+|---------------------|-----------------------------------------------------------------------------|
+| **Frontend**        | React, Vite, TailwindCSS                                                    |
+| **Backend**         | NestJS (TypeScript), Prisma ORM                                             |
+| **Base de Datos**   | PostgreSQL                                                                   |
+| **Blockchain**      | Hardhat, Solidity (Contrato `DeliveryRegistry.sol`)                         |
+| **IA**              | Anthropic Claude (Visión)                                                    |
+| **WhatsApp**        | Twilio WhatsApp Sandbox (Opcional), Simulador interno                       |
+| **Contenerización** | Docker, Docker Compose                                                       |
+
+## Requisitos Previos
+
+- [Docker y Docker Compose](https://docs.docker.com/get-docker/)
+- [Anthropic API Key](https://console.anthropic.com/) (para validación de evidencias)
+- (Opcional) Cuenta de [Twilio](https://www.twilio.com/try-twilio) para WhatsApp real
+
+## Instalación y Despliegue
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/tu-usuario/vasochainAI.git
+cd vasochainAI
+```
+
+### 2. Configurar variables de entorno
 
 ```bash
 cp .env.example .env
 ```
 
-Abre `.env` y completa al menos:
-
-```
+Edita el archivo `.env` y configura al menos:
+```env
 ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-El resto de variables ya tiene valores por defecto que funcionan para desarrollo local. Las credenciales de Twilio (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`) son opcionales — solo se necesitan para el Plan B (ver sección al final).
-
-## 2. Levantar todo el sistema
+### 3. Levantar el sistema
 
 ```bash
 docker compose up --build
 ```
 
-Esto construye y levanta 4 contenedores en orden controlado:
+Esto construirá y levantará 4 contenedores en orden controlado:
+1. `postgres`: Base de datos
+2. `hardhat-node`: Nodo blockchain local (compila y despliega `DeliveryRegistry` automáticamente)
+3. `backend`: API NestJS (espera a servicios dependientes y ejecuta migraciones)
+4. `frontend`: Dashboard React
 
-1. `postgres` — base de datos.
-2. `hardhat-node` — nodo blockchain local; compila y despliega automáticamente el contrato `DeliveryRegistry` al iniciar.
-3. `backend` — espera a que postgres y la blockchain estén saludables, corre las migraciones de Prisma y levanta la API en `http://localhost:3000`.
-4. `frontend` — dashboard en `http://localhost:5173`.
+La primera vez puede tardar varios minutos.
 
-La primera vez puede tardar unos minutos (descarga de imágenes, compilación de contratos, instalación de dependencias). Las siguientes veces será mucho más rápido gracias al cache de Docker.
+### 4. Acceder a las interfaces
 
-Cuando todo esté arriba, abre **http://localhost:5173**.
+- **Dashboard**: [http://localhost:5174](http://localhost:5174)
+- **Backend API**: [http://localhost:3001](http://localhost:3001)
+- **Hardhat Node**: [http://localhost:8545](http://localhost:8545)
 
-## 3. Probar el flujo completo (Plan A — sin nada externo)
+## Uso Básico
 
-Este es el camino recomendado para la demo, porque no depende de Twilio, ngrok ni de conexión a internet del lugar:
+### Plan A: Sin dependencias externas (Recomendado para Demo)
 
-1. En el dashboard, ve a **Beneficiarios** y registra uno (nombre, DNI, club de madres, sector). Esto genera automáticamente su código QR.
-2. Ve a **Simulador WhatsApp**.
-3. Selecciona el beneficiario y haz clic en "Simular escaneo de QR" — esto abre la conversación simulada.
-4. Adjunta una foto cualquiera (idealmente de comida, víveres, o una entrega) y envíala.
-5. El sistema: valida la foto con IA → registra el resultado en la blockchain local → lo persiste en PostgreSQL.
-6. Ve a **Panel general** o **Entregas** para ver el resultado en tiempo real, incluyendo el hash de la transacción on-chain.
+1. **Registrar Beneficiario**: Ve a la sección "Beneficiarios" y crea uno
+2. **Simular Escaneo**: Ve al "Simulador WhatsApp" y selecciona el beneficiario
+3. **Enviar Foto**: Adjunta una imagen (idealmente de comida/víveres)
+4. **Ver Resultado**: Consulta el "Panel General" o "Entregas" para ver la entrega validada y registrada en la blockchain
 
-## 4. (Opcional) Activar el Plan B: WhatsApp real con Twilio
+### Plan B: WhatsApp Real con Twilio
 
-Si quieres que alguien pueda escribirle de verdad al número de WhatsApp Sandbox desde su celular:
+#### 1. Configurar Twilio
+- Crea una cuenta y activa el [WhatsApp Sandbox](https://www.twilio.com/try-twilio)
+- Añade `TWILIO_ACCOUNT_SID` y `TWILIO_AUTH_TOKEN` a tu `.env`
 
-### a) Crear cuenta y activar el Sandbox de Twilio
-
-1. Crea una cuenta gratuita en [twilio.com](https://www.twilio.com/try-twilio).
-2. En la consola, ve a **Messaging → Try it out → Send a WhatsApp message** para activar el WhatsApp Sandbox.
-3. Sigue las instrucciones para vincular tu número de WhatsApp personal al sandbox (vas a enviar un mensaje tipo "join nombre-clave" al número que te indiquen).
-4. Copia el **Account SID** y el **Auth Token** desde el dashboard principal de Twilio y pégalos en tu `.env`:
-
-```
-TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
-
-### b) Exponer tu backend local con ngrok
-
-Twilio necesita poder enviarle peticiones a tu backend, que corre en tu máquina local. Para eso usamos ngrok como túnel temporal:
-
-1. Instala ngrok: [https://ngrok.com/download](https://ngrok.com/download) (o `brew install ngrok` en Mac, o descarga el binario para Windows/Linux).
-2. Crea una cuenta gratuita en ngrok y autentica tu CLI siguiendo las instrucciones de su dashboard (comando `ngrok config add-authtoken ...`).
-3. Con el backend ya corriendo (`docker compose up`), en otra terminal ejecuta:
-
+#### 2. Exponer backend con ngrok
 ```bash
 ngrok http 3000
 ```
 
-4. ngrok te dará una URL pública, algo como `https://a1b2c3d4.ngrok-free.app`. Cópiala.
+#### 3. Configurar Webhook en Twilio
+- En la configuración del Sandbox, configura "When a message comes in" a:
+  `https://TU-URL-NGROK.ngrok-free.app/whatsapp/webhook`
 
-### c) Configurar el webhook en Twilio
+#### 4. Asociar número
+Realiza una solicitud `POST /whatsapp/iniciar-sesion` con:
+```json
+{
+  "numeroWhatsapp": "whatsapp:+51999999999",
+  "beneficiarioId": "ID_DEL_BENEFICIARIO"
+}
+```
 
-1. Vuelve a la consola de Twilio, en la configuración del WhatsApp Sandbox.
-2. En el campo **"When a message comes in"**, pega tu URL de ngrok seguida de `/whatsapp/webhook`:
+## Estructura del Proyecto
 
 ```
-https://a1b2c3d4.ngrok-free.app/whatsapp/webhook
+vasochainAI/
+├── backend/
+│   ├── prisma/
+│   │   ├── migrations/
+│   │   └── schema.prisma
+│   ├── src/
+│   │   ├── auth/
+│   │   ├── beneficiarios/
+│   │   ├── blockchain/
+│   │   ├── controles/
+│   │   ├── entregas/
+│   │   ├── harness/
+│   │   ├── ia/
+│   │   ├── prisma/
+│   │   └── whatsapp/
+│   ├── Dockerfile
+│   └── package.json
+├── blockchain/
+│   ├── contracts/
+│   │   └── DeliveryRegistry.sol
+│   ├── scripts/
+│   │   └── deploy.js
+│   ├── Dockerfile
+│   └── hardhat.config.js
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── lib/
+│   │   ├── pages/
+│   │   └── App.jsx
+│   ├── Dockerfile
+│   └── package.json
+├── docker-compose.yml
+└── .env.example
 ```
 
-3. Guarda los cambios.
+## Mantenimiento y Apagado
 
-### d) Probarlo
-
-1. Asocia tu número de WhatsApp con un beneficiarioId llamando al endpoint `POST /whatsapp/iniciar-sesion` con `{ "numeroWhatsapp": "whatsapp:+51999999999", "beneficiarioId": "..." }` (puedes hacerlo con curl o Postman).
-2. Envía una foto al número de WhatsApp Sandbox desde tu celular.
-3. El backend recibirá el webhook, descargará la imagen, y disparará el mismo pipeline interno que usa el Plan A (validación IA → blockchain → dashboard).
-
-**Nota:** cada vez que reinicies ngrok sin un dominio fijo, la URL pública cambia y tendrás que actualizarla en la configuración del Sandbox de Twilio.
-
-## Apagar el sistema
-
+### Apagar sistema
 ```bash
 docker compose down
 ```
 
-Para borrar también los datos persistidos (base de datos, contrato desplegado, fotos subidas):
-
+### Eliminar datos persistentes
 ```bash
 docker compose down -v
 ```
 
-## Estructura del proyecto
+## Resolución de Problemas Comunes
 
-```
-vasochain-ai/
-├── backend/        # API NestJS + Prisma + integraciones (IA, blockchain, WhatsApp)
-├── blockchain/      # Contratos Solidity + nodo Hardhat local
-├── frontend/        # Dashboard React + Vite + Tailwind
-├── docker-compose.yml
-└── .env.example
-```
-=======
-# vasochainAI
-Agente autónomo basado en IA, Blockchain y WhatsApp para la supervisión transparente y trazable del Programa Vaso de Leche.
->>>>>>> 86ca7701554285a719e8840beef5ece2534fa84b
+| Problema                                  | Solución                                                                 |
+|-------------------------------------------|--------------------------------------------------------------------------|
+| Error "exec ./entrypoint.sh: no such file or directory" | Asegúrate de que los archivos `.sh` usen **LF** (no CRLF) como saltos de línea |
+| Contenedor unhealthy                      | Ejecuta `docker compose logs <nombre-contenedor>` para ver registros     |
+| No se conecta a la blockchain             | Verifica que el contenedor `hardhat-node` esté healthy                  |
+
+## Contribuir
+
+¡Las contribuciones son bienvenidas! Por favor:
+1. Haz un fork del repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit tus cambios (`git commit -m 'Añade nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abre un Pull Request
+
+## Licencia
+
+Este proyecto está licenciado bajo la [Licencia MIT](https://opensource.org/licenses/MIT). Ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## Soporte y Contacto
+
+- Para reportar bugs o solicitar features: [Issues](https://github.com/tu-usuario/vasochainAI/issues)
+- Preguntas generales: Discusiones en [GitHub Discussions](https://github.com/tu-usuario/vasochainAI/discussions)
