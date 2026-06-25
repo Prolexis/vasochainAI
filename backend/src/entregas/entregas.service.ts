@@ -209,7 +209,29 @@ export class EntregasService {
       this.logger.error('Error ejecutando controles de arnés:', error);
     }
 
-    return entrega;
+    // Retornar la entrega completa incluyendo sus controlRuns y beneficiario
+    const entregaCompleta = await this.ejecutarConReintento(
+      () =>
+        this.prisma.entrega.findUnique({
+          where: { id: entrega.id },
+          include: {
+            beneficiario: true,
+            controlRuns: {
+              include: {
+                control: true,
+              },
+              orderBy: {
+                control: {
+                  orden: 'asc',
+                },
+              },
+            },
+          },
+        }),
+      'obtener entrega completa con controles',
+    );
+
+    return entregaCompleta || entrega;
   }
 
   private async crearAlerta(entregaId: string, tipo: string, mensaje: string) {

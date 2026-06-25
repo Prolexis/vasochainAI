@@ -116,26 +116,26 @@ La primera vez puede tardar varios minutos.
 3. **Enviar Foto**: Adjunta una imagen (idealmente de comida/víveres)
 4. **Ver Resultado**: Consulta el "Panel General" o "Entregas" para ver la entrega validada y registrada en la blockchain
 
-### Plan B: WhatsApp Real con Twilio
+### Plan B: WhatsApp Real con Whapi.Cloud
 
-#### 1. Configurar Twilio
-- Crea una cuenta y activa el [WhatsApp Sandbox](https://www.twilio.com/try-twilio)
-- Añade `TWILIO_ACCOUNT_SID` y `TWILIO_AUTH_TOKEN` a tu `.env`
+#### 1. Configurar Whapi.Cloud
+- Añade `WHAPI_TOKEN` y `WHAPI_API_URL` a tu `.env`
 
-#### 2. Exponer backend con ngrok
+#### 2. Exponer backend con Cloudflare Tunnel
+El túnel se levanta automáticamente con Docker Compose. Para obtener tu URL pública autogenerada, ejecuta:
 ```bash
-ngrok http 3000
+docker compose logs tunnel
 ```
 
-#### 3. Configurar Webhook en Twilio
-- En la configuración del Sandbox, configura "When a message comes in" a:
-  `https://TU-URL-NGROK.ngrok-free.app/whatsapp/webhook`
+#### 3. Configurar Webhook en Whapi.Cloud
+- En tu panel de Whapi.Cloud, configura tu webhook apuntando a:
+  `https://TU-URL-DE-TUNNEL.trycloudflare.com/whatsapp/webhook`
 
 #### 4. Asociar número
 Realiza una solicitud `POST /whatsapp/iniciar-sesion` con:
 ```json
 {
-  "numeroWhatsapp": "whatsapp:+51999999999",
+  "numeroWhatsapp": "51999999999",
   "beneficiarioId": "ID_DEL_BENEFICIARIO"
 }
 ```

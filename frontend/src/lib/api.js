@@ -33,6 +33,14 @@ export const api = {
 
   urlQr: (id) => `${API_URL}/beneficiarios/${id}/qr`,
 
+  // WhatsApp Real Session
+  iniciarSesionWhatsapp: (numeroWhatsapp, beneficiarioId) =>
+    fetch(`${API_URL}/whatsapp/iniciar-sesion`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ numeroWhatsapp, beneficiarioId }),
+    }).then(manejarRespuesta),
+
   // Entregas
   listarEntregas: () => fetch(`${API_URL}/entregas`).then(manejarRespuesta),
 

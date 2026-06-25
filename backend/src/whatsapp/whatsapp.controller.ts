@@ -1,4 +1,4 @@
-import { Body, Controller, Header, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { WhatsappService } from './whatsapp.service';
 
@@ -7,33 +7,48 @@ export class WhatsappController {
   constructor(private readonly whatsappService: WhatsappService) {}
 
   /**
-   * Webhook que Twilio invoca (vía ngrok en desarrollo local) cuando
-   * llega un mensaje al número de WhatsApp Sandbox. Plan B de la
-   * integración: requiere credenciales Twilio configuradas en el .env.
+   * Webhook que Whapi.Cloud invoca cuando llega un mensaje de WhatsApp.
+   * Responde con un status 200 de forma inmediata para evitar timeouts
+   * y reintentos del webhook, y procesa la lógica en segundo plano.
    */
   @Post('webhook')
-  @Header('Content-Type', 'text/xml')
   async webhook(@Body() body: any, @Res() res: Response) {
-    const twiml = await this.whatsappService.procesarMensajeEntrante({
-      from: body.From,
-      numMedia: parseInt(body.NumMedia || '0', 10),
-      mediaUrl: body.MediaUrl0,
-      mediaContentType: body.MediaContentType0,
-      body: body.Body,
+    return this.handleWebhook(body, res);
+  }
+
+  @Post('webhook/messages')
+  async webhookMessages(@Body() body: any, @Res() res: Response) {
+    return this.handleWebhook(body, res);
+  }
+
+  @Post('webhook/message')
+  async webhookMessage(@Body() body: any, @Res() res: Response) {
+    return this.handleWebhook(body, res);
+  }
+
+  @Post('webhook/status')
+  async webhookStatus(@Body() body: any, @Res() res: Response) {
+    return this.handleWebhook(body, res);
+  }
+
+  private async handleWebhook(body: any, res: Response) {
+    console.log('--- WEBHOOK RECIBIDO DESDE WHAPI ---');
+    console.log(JSON.stringify(body, null, 2));
+    this.whatsappService.procesarWebhookWhapi(body).catch((err) => {
+      console.error('Error procesando webhook Whapi:', err);
     });
-    res.send(twiml);
+    return res.status(200).send({ ok: true });
   }
 
   /**
-   * Asocia un número de WhatsApp con un beneficiarioId antes de pedir la
-   * foto (por ejemplo, justo después de escanear el QR en el panel).
-   * Útil tanto para pruebas del Plan B como para flujos guiados.
+   * Asocia un número de WhatsApp con un beneficiarioId antes de enviar la
+   * evidencia (por ejemplo, justo después de escanear el QR en el panel).
    */
   @Post('iniciar-sesion')
-  iniciarSesion(
+  async iniciarSesion(
     @Body() body: { numeroWhatsapp: string; beneficiarioId: string },
   ) {
-    this.whatsappService.registrarSesion(
+    await this.whatsappService.registrarSesionYSaludar(
       body.numeroWhatsapp,
       body.beneficiarioId,
     );

@@ -85,12 +85,18 @@ export class IaService {
       );
     }
 
-    const prompt = `Eres un validador automático de evidencias del Programa Vaso de Leche (programa social de distribución de alimentos en Perú).
+    const prompt = `Eres un validador automático de evidencias del Programa Vaso de Leche y programas sociales de asistencia alimentaria.
 
-Analiza la imagen adjunta y determina si muestra evidencia razonable de una entrega real de alimentos: por ejemplo, bolsas de víveres, productos alimenticios, una persona recibiendo o sosteniendo alimentos, o una escena de reparto comunitario.
+Analiza detenidamente la imagen adjunta. Debes evaluar si la foto muestra evidencia razonable de:
+1. Alimentos crudos o procesados (leche en tarro, bolsas de avena, cereales, arroz, menestras, pan, etc.).
+2. Comida preparada o raciones listas para consumo.
+3. Personas sosteniendo, recibiendo o entregando alimentos o raciones.
+4. Escenas de reparto de comida o canastas en un comedor popular, club de madres o almacén.
 
-Responde EXCLUSIVAMENTE con un objeto JSON, sin texto adicional, sin markdown, con este formato exacto:
-{"valido": true o false, "confianza": numero entre 0 y 1, "motivo": "explicación breve en español"}`;
+Determina que la imagen es VÁLIDA (valido: true) si se muestra cualquiera de estas condiciones. Sé flexible con el tipo de alimento (ya sea un tarro de leche o comida en plato/bolsa), pero riguroso en descartar fotos que no contengan comida en absoluto (como paisajes vacíos, selfies sin alimentos, capturas de pantalla de chats, objetos domésticos sin comida, etc.).
+
+Responde EXCLUSIVAMENTE con un objeto JSON válido, sin texto explicativo fuera de este, sin bloques de código ni formato markdown. Usa este formato exacto:
+{"valido": true o false, "confianza": numero decimal entre 0 y 1, "motivo": "explicación breve en español de lo observado y decisión"}`;
 
     if (this.proveedor === 'anthropic') {
       return this.validarConAnthropic(imagenBase64, mediaType, prompt);
@@ -161,6 +167,7 @@ Responde EXCLUSIVAMENTE con un objeto JSON, sin texto adicional, sin markdown, c
       ],
     });
 
+    this.logger.log(`OpenAI API Response: ${JSON.stringify(response)}`);
     const rawText = response.choices[0]?.message?.content || '';
 
     return this.parsearRespuesta(rawText);
