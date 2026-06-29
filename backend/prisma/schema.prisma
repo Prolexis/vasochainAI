@@ -19,6 +19,8 @@ enum EstadoEntrega {
 enum OrigenEntrega {
   simulado
   whatsapp_real
+  telegram_real
+  discord_real
 }
 
 model Beneficiario {

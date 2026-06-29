@@ -41,6 +41,20 @@ export const api = {
       body: JSON.stringify({ numeroWhatsapp, beneficiarioId }),
     }).then(manejarRespuesta),
 
+  iniciarSesionTelegram: (chatId, beneficiarioId) =>
+    fetch(`${API_URL}/telegram/iniciar-sesion`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chatId, beneficiarioId }),
+    }).then(manejarRespuesta),
+
+  iniciarSesionDiscord: (userId, beneficiarioId) =>
+    fetch(`${API_URL}/discord/iniciar-sesion`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, beneficiarioId }),
+    }).then(manejarRespuesta),
+
   // Entregas
   listarEntregas: () => fetch(`${API_URL}/entregas`).then(manejarRespuesta),
 

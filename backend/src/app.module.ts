@@ -7,6 +7,8 @@ import { PrismaModule } from './prisma/prisma.module';
 import { BeneficiariosModule } from './beneficiarios/beneficiarios.module';
 import { EntregasModule } from './entregas/entregas.module';
 import { WhatsappModule } from './whatsapp/whatsapp.module';
+import { TelegramModule } from './telegram/telegram.module';
+import { DiscordModule } from './discord/discord.module';
 import { IaModule } from './ia/ia.module';
 import { BlockchainModule } from './blockchain/blockchain.module';
 import { ControlesModule } from './controles/controles.module';
@@ -27,6 +29,8 @@ import { AuthModule } from './auth/auth.module';
     BeneficiariosModule,
     EntregasModule,
     WhatsappModule,
+    TelegramModule,
+    DiscordModule,
     IaModule,
     BlockchainModule,
     ControlesModule,

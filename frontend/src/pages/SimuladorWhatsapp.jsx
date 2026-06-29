@@ -8,6 +8,12 @@ const ESTADOS_FLUJO = {
   RESULTADO: 'resultado',
 };
 
+const CANALES = {
+  WHATSAPP: 'whatsapp',
+  TELEGRAM: 'telegram',
+  DISCORD: 'discord',
+};
+
 export default function SimuladorWhatsapp() {
   const [beneficiarios, setBeneficiarios] = useState([]);
   const [beneficiarioId, setBeneficiarioId] = useState('');
@@ -16,9 +22,10 @@ export default function SimuladorWhatsapp() {
   const [archivoFoto, setArchivoFoto] = useState(null);
   const [previewFoto, setPreviewFoto] = useState(null);
   const [error, setError] = useState(null);
+  const [canal, setCanal] = useState(CANALES.WHATSAPP);
   const finChatRef = useRef(null);
 
-  // Estados para WhatsApp Real
+  // Estados para Canal Real
   const [numeroReal, setNumeroReal] = useState('');
   const [cargandoReal, setCargandoReal] = useState(false);
   const [mensajeReal, setMensajeReal] = useState(null);
@@ -32,10 +39,16 @@ export default function SimuladorWhatsapp() {
     setCargandoReal(true);
     setMensajeReal(null);
     try {
-      await api.iniciarSesionWhatsapp(numeroReal, beneficiarioId);
+      if (canal === CANALES.WHATSAPP) {
+        await api.iniciarSesionWhatsapp(numeroReal, beneficiarioId);
+      } else if (canal === CANALES.TELEGRAM) {
+        await api.iniciarSesionTelegram(numeroReal, beneficiarioId);
+      } else if (canal === CANALES.DISCORD) {
+        await api.iniciarSesionDiscord(numeroReal, beneficiarioId);
+      }
       setMensajeReal({
         tipo: 'success',
-        texto: '¡Sesión asociada! Envía ahora tu foto de evidencia desde WhatsApp.',
+        texto: `¡Sesión asociada! Envía ahora tu foto de evidencia desde ${canal === CANALES.WHATSAPP ? 'WhatsApp' : canal === CANALES.TELEGRAM ? 'Telegram' : 'Discord'}.`,
       });
     } catch (err) {
       setMensajeReal({ tipo: 'error', texto: `Error: ${err.message}` });
@@ -62,17 +75,45 @@ export default function SimuladorWhatsapp() {
     setError(null);
     
     const saludo = getSaludoPorHora();
-    const msgBienvenida = `🤝 *¡Hola, ${beneficiario.nombre}!* ${saludo}\n\n` +
-      `Te saluda *VasoChain AI* 🤖, el asistente virtual del programa social.\n\n` +
-      `Hemos iniciado tu proceso de entrega en el club de madres *${beneficiario.clubMadres || 'Club Municipal'}*.\n\n` +
-      `📸 *¿Qué debes hacer ahora?*\n` +
-      `Por favor, envíame una *foto clara y nítida de los productos* (leche, avena, raciones, etc.) que estás recibiendo para validar tu entrega.\n\n` +
-      `*Validaciones activas en tiempo real:*\n` +
-      `🔍 [HC-001] Verificación de código QR\n` +
-      `🛰️ [HC-002] Geolocalización del punto\n` +
-      `🕒 [HC-003] Consistencia de rango horario\n` +
-      `🧠 [HC-004] Clasificación por Inteligencia Artificial\n` +
-      `🔗 [HC-010] Registro y sellado inmutable en Blockchain`;
+    let msgBienvenida = '';
+
+    if (canal === CANALES.TELEGRAM) {
+      msgBienvenida = `🤝 <b>¡Hola, ${beneficiario.nombre}!</b> ${saludo}\n\n` +
+        `Te saluda <b>VasoChain AI</b> 🤖, el asistente virtual del programa social.\n\n` +
+        `Hemos iniciado tu proceso de entrega en el club de madres <b>${beneficiario.clubMadres || 'Club Municipal'}</b>.\n\n` +
+        `📸 <b>¿Qué debes hacer ahora?</b>\n` +
+        `Por favor, envíame una <b>foto clara y nítida de los productos</b> (leche, avena, raciones, etc.) que estás recibiendo para validar tu entrega.\n\n` +
+        `<b>Validaciones activas en tiempo real:</b>\n` +
+        `🔍 [HC-001] Verificación de código QR\n` +
+        `🛰️ [HC-002] Geolocalización del punto\n` +
+        `🕒 [HC-003] Consistencia de rango horario\n` +
+        `🧠 [HC-004] Clasificación por Inteligencia Artificial\n` +
+        `🔗 [HC-010] Registro y sellado inmutable en Blockchain`;
+    } else if (canal === CANALES.DISCORD) {
+      msgBienvenida = `🤝 **¡Hola, ${beneficiario.nombre}!** ${saludo}\n\n` +
+        `Te saluda **VasoChain AI** 🤖, el asistente virtual del programa social.\n\n` +
+        `Hemos iniciado tu proceso de entrega en el club de madres **${beneficiario.clubMadres || 'Club Municipal'}**.\n\n` +
+        `📸 **¿Qué debes hacer ahora?**\n` +
+        `Por favor, envíame una **foto clara y nítida de los productos** (leche, avena, raciones, etc.) que estás recibiendo para validar tu entrega.\n\n` +
+        `**Validaciones activas en tiempo real:**\n` +
+        `🔍 [HC-001] Verificación de código QR\n` +
+        `🛰️ [HC-002] Geolocalización del punto\n` +
+        `🕒 [HC-003] Consistencia de rango horario\n` +
+        `🧠 [HC-004] Clasificación por Inteligencia Artificial\n` +
+        `🔗 [HC-010] Registro y sellado inmutable en Blockchain`;
+    } else {
+      msgBienvenida = `🤝 *¡Hola, ${beneficiario.nombre}!* ${saludo}\n\n` +
+        `Te saluda *VasoChain AI* 🤖, el asistente virtual del programa social.\n\n` +
+        `Hemos iniciado tu proceso de entrega en el club de madres *${beneficiario.clubMadres || 'Club Municipal'}*.\n\n` +
+        `📸 *¿Qué debes hacer ahora?*\n` +
+        `Por favor, envíame una *foto clara y nítida de los productos* (leche, avena, raciones, etc.) que estás recibiendo para validar tu entrega.\n\n` +
+        `*Validaciones activas en tiempo real:*\n` +
+        `🔍 [HC-001] Verificación de código QR\n` +
+        `🛰️ [HC-002] Geolocalización del punto\n` +
+        `🕒 [HC-003] Consistencia de rango horario\n` +
+        `🧠 [HC-004] Clasificación por Inteligencia Artificial\n` +
+        `🔗 [HC-010] Registro y sellado inmutable en Blockchain`;
+    }
 
     agregarMensaje('bot', msgBienvenida);
     setEstadoFlujo(ESTADOS_FLUJO.ESPERANDO_FOTO);
@@ -111,25 +152,61 @@ export default function SimuladorWhatsapp() {
       const entrega = await api.simularWhatsapp(beneficiarioId, archivoFoto);
       const saludo = getSaludoPorHora();
       const nombreBenef = entrega.beneficiario?.nombre || 'Beneficiario';
-      const reporte = generarReporteControlesFrontend(entrega);
+      const reporte = generarReporteControlesFrontend(entrega, canal);
 
       let mensajeFinal = '';
       if (entrega.estado === 'VALIDADA') {
-        mensajeFinal = `✅ *Entrega Validada Exitosamente*\n\n` +
-          `¡Excelente, *${nombreBenef}*! ${saludo}. La evidencia de alimentos ha sido procesada y aprobada correctamente por nuestro pipeline de control digital.\n\n` +
-          `${reporte}\n\n` +
-          `🔗 *REGISTRO INMUTABLE EN CADENA:*\n` +
-          `• *Estado:* VALIDADA 🟢\n` +
-          `• *Hash Evidencia:* ${entrega.hashBlockchain || 'N/D'}\n` +
-          `• *Transacción Blockchain (Tx):* ${entrega.txHash || 'N/D'}\n\n` +
-          `¡Gracias por registrar tu entrega en *VasoChain AI*! 🥛✨`;
+        if (canal === CANALES.TELEGRAM) {
+          mensajeFinal = `✅ <b>Entrega Validada Exitosamente</b>\n\n` +
+            `¡Excelente, <b>${nombreBenef}</b>! ${saludo}.\n\nLa evidencia de alimentos ha sido procesada y aprobada correctamente por nuestro pipeline de control digital.\n\n` +
+            `${reporte}\n\n` +
+            `🔗 <b>REGISTRO INMUTABLE EN CADENA:</b>\n` +
+            `• <b>Estado:</b> VALIDADA 🟢\n` +
+            `• <b>Hash Evidencia:</b> <code>${entrega.hashBlockchain || 'N/D'}</code>\n` +
+            `• <b>Transacción Blockchain (Tx):</b> <code>${entrega.txHash || 'N/D'}</code>\n\n` +
+            `¡Gracias por registrar tu entrega en <b>VasoChain AI</b>! 🥛✨`;
+        } else if (canal === CANALES.DISCORD) {
+          mensajeFinal = `✅ **Entrega Validada Exitosamente**\n\n` +
+            `¡Excelente, **${nombreBenef}**! ${saludo}.\n\nLa evidencia de alimentos ha sido procesada y aprobada correctamente por nuestro pipeline de control digital.\n\n` +
+            `${reporte}\n\n` +
+            `🔗 **REGISTRO INMUTABLE EN CADENA:**\n` +
+            `• **Estado:** VALIDADA 🟢\n` +
+            `• **Hash Evidencia:** \`${entrega.hashBlockchain || 'N/D'}\`\n` +
+            `• **Transacción Blockchain (Tx):** \`${entrega.txHash || 'N/D'}\`\n\n` +
+            `¡Gracias por registrar tu entrega en **VasoChain AI**! 🥛✨`;
+        } else {
+          mensajeFinal = `✅ *Entrega Validada Exitosamente*\n\n` +
+            `¡Excelente, *${nombreBenef}*! ${saludo}.\n\nLa evidencia de alimentos ha sido procesada y aprobada correctamente por nuestro pipeline de control digital.\n\n` +
+            `${reporte}\n\n` +
+            `🔗 *REGISTRO INMUTABLE EN CADENA:*\n` +
+            `• *Estado:* VALIDADA 🟢\n` +
+            `• *Hash Evidencia:* ${entrega.hashBlockchain || 'N/D'}\n` +
+            `• *Transacción Blockchain (Tx):* ${entrega.txHash || 'N/D'}\n\n` +
+            `¡Gracias por registrar tu entrega en *VasoChain AI*! 🥛✨`;
+        }
       } else {
-        mensajeFinal = `❌ *Observación en la Entrega*\n\n` +
-          `Hola *${nombreBenef}*, ${saludo.toLowerCase()}. La evidencia fotográfica enviada no logró pasar todas las verificaciones automáticas de seguridad.\n\n` +
-          `${reporte}\n\n` +
-          `⚠️ *Estado:* BAJO REVISIÓN MUNICIPAL\n` +
-          `• *Siguiente paso:* Tu caso ha sido derivado a un supervisor de la municipalidad para una auditoría manual. No te preocupes, esto no anula automáticamente tu beneficio si se valida de forma manual.\n\n` +
-          `¡Gracias por tu paciencia!`;
+        if (canal === CANALES.TELEGRAM) {
+          mensajeFinal = `❌ <b>Observación en la Entrega</b>\n\n` +
+            `Hola <b>${nombreBenef}</b>, ${saludo.toLowerCase()}. La evidencia fotográfica enviada no logró pasar todas las verificaciones automáticas de seguridad.\n\n` +
+            `${reporte}\n\n` +
+            `⚠️ <b>Estado:</b> BAJO REVISIÓN MUNICIPAL\n` +
+            `• <b>Siguiente paso:</b> Tu caso ha sido derivado a un supervisor de la municipalidad para una auditoría manual. No te preocupes, esto no anula automáticamente tu beneficio si se valida de forma manual.\n\n` +
+            `¡Gracias por tu paciencia!`;
+        } else if (canal === CANALES.DISCORD) {
+          mensajeFinal = `❌ **Observación en la Entrega**\n\n` +
+            `Hola **${nombreBenef}**, ${saludo.toLowerCase()}. La evidencia fotográfica enviada no logró pasar todas las verificaciones automáticas de seguridad.\n\n` +
+            `${reporte}\n\n` +
+            `⚠️ **Estado:** BAJO REVISIÓN MUNICIPAL\n` +
+            `• **Siguiente paso:** Tu caso ha sido derivado a un supervisor de la municipalidad para una auditoría manual. No te preocupes, esto no anula automáticamente tu beneficio si se valida de forma manual.\n\n` +
+            `¡Gracias por tu paciencia!`;
+        } else {
+          mensajeFinal = `❌ *Observación en la Entrega*\n\n` +
+            `Hola *${nombreBenef}*, ${saludo.toLowerCase()}. La evidencia fotográfica enviada no logró pasar todas las verificaciones automáticas de seguridad.\n\n` +
+            `${reporte}\n\n` +
+            `⚠️ *Estado:* BAJO REVISIÓN MUNICIPAL\n` +
+            `• *Siguiente paso:* Tu caso ha sido derivado a un supervisor de la municipalidad para una auditoría manual. No te preocupes, esto no anula automáticamente tu beneficio si se valida de forma manual.\n\n` +
+            `¡Gracias por tu paciencia!`;
+        }
       }
 
       setTimeout(() => {
@@ -166,106 +243,149 @@ export default function SimuladorWhatsapp() {
           Plan A · sin dependencias externas
         </p>
         <h1 className="font-display text-3xl tracking-tight text-paper-100">
-          Simulador de conversación WhatsApp
+          Simulador de conversación Multicanal
         </h1>
         <p className="text-paper-300/55 text-sm mt-2 max-w-xl leading-relaxed">
-          Reproduce el mismo flujo que activaría un mensaje real: validación
-          con IA, sello en la cadena y registro en el libro, sin depender
-          de Twilio ni de internet externo.
+          Reproduce el mismo flujo que activaría un mensaje real de WhatsApp, Telegram o Discord:
+          validación con IA, sello en la cadena y registro en el libro, sin depender
+          de servidores de producción.
         </p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
-        <div className="rounded-sm border border-ledger-700 bg-ledger-900 p-5 h-fit">
-          <p className="text-[10px] uppercase tracking-[0.1em] text-paper-300/45 font-mono mb-2">
-            1. Beneficiario que escaneó su sello
-          </p>
-          <select
-            value={beneficiarioId}
-            onChange={(e) => setBeneficiarioId(e.target.value)}
-            disabled={estadoFlujo !== ESTADOS_FLUJO.INICIAL}
-            className="w-full rounded-sm border border-ledger-600 bg-ledger-950 text-paper-200 px-3 py-2 text-sm mb-3 disabled:opacity-50"
-          >
-            <option value="">Seleccionar beneficiario…</option>
-            {beneficiarios.map((b) => (
-              <option key={b.id} value={b.id}>
-                {b.nombre} · {b.clubMadres}
-              </option>
-            ))}
-          </select>
-
-          <button
-            onClick={iniciarConversacion}
-            disabled={!beneficiarioId || estadoFlujo !== ESTADOS_FLUJO.INICIAL}
-            className="w-full bg-seal-600 hover:bg-seal-500 disabled:opacity-40 text-paper-100 text-sm py-2.5 rounded-sm transition-colors font-display italic"
-          >
-            Simular escaneo de sello
-          </button>
-
-          {estadoFlujo !== ESTADOS_FLUJO.INICIAL && (
-            <button
-              onClick={reiniciar}
-              className="w-full mt-2 text-[11px] font-mono text-paper-300/45 hover:text-paper-300/80 py-2"
-            >
-              reiniciar simulación
-            </button>
-          )}
-
-        </div>
-
-        <div className="rounded-sm border border-ledger-700 bg-ledger-900 p-5 h-fit mt-4">
-          <p className="text-[10px] uppercase tracking-[0.1em] text-paper-300/45 font-mono mb-2">
-            Plan B · WhatsApp Real (Whapi)
-          </p>
-          <p className="text-xs text-paper-300/60 leading-relaxed mb-4">
-            Registra una sesión real para asociar tu número de WhatsApp con el
-            beneficiario seleccionado, y luego envía la foto de evidencia desde tu celular.
-          </p>
-          <div className="space-y-3">
-            <div>
-              <label className="text-[10px] text-paper-300/40 uppercase tracking-wider block mb-1">
-                Número de Celular
-              </label>
-              <input
-                type="text"
-                value={numeroReal}
-                onChange={(e) => setNumeroReal(e.target.value)}
-                placeholder="ej: 51999999999"
-                className="w-full rounded-sm border border-ledger-600 bg-ledger-950 text-paper-200 px-3 py-1.5 text-sm font-mono focus:border-confirm-400/50 outline-none"
-              />
-            </div>
-            <button
-              onClick={asociarSesionReal}
-              disabled={!beneficiarioId || !numeroReal || cargandoReal}
-              className="w-full bg-confirm-500 hover:bg-confirm-400 disabled:opacity-40 text-ledger-950 text-sm py-2 rounded-sm transition-colors font-display italic font-medium"
-            >
-              {cargandoReal ? 'Asociando...' : 'Asociar Sesión Real'}
-            </button>
-            {mensajeReal && (
-              <p
-                className={`text-xs mt-2 font-mono ${
-                  mensajeReal.tipo === 'error'
-                    ? 'text-deny-400'
-                    : 'text-confirm-400'
+        <div className="space-y-4">
+          <div className="rounded-sm border border-ledger-700 bg-ledger-900 p-5 h-fit">
+            <p className="text-[10px] uppercase tracking-[0.1em] text-paper-300/45 font-mono mb-2">
+              Canal de Mensajería
+            </p>
+            <div className="flex gap-2 mb-4">
+              <button
+                onClick={() => { setCanal(CANALES.WHATSAPP); reiniciar(); }}
+                className={`flex-1 text-xs py-1.5 rounded-sm border font-mono transition-colors ${
+                  canal === CANALES.WHATSAPP
+                    ? 'bg-confirm-500/10 border-confirm-400 text-confirm-300'
+                    : 'bg-ledger-950 border-ledger-700 text-paper-300/60 hover:text-paper-300'
                 }`}
               >
-                {mensajeReal.texto}
-              </p>
+                WhatsApp
+              </button>
+              <button
+                onClick={() => { setCanal(CANALES.TELEGRAM); reiniciar(); }}
+                className={`flex-1 text-xs py-1.5 rounded-sm border font-mono transition-colors ${
+                  canal === CANALES.TELEGRAM
+                    ? 'bg-seal-500/10 border-seal-400 text-seal-300'
+                    : 'bg-ledger-950 border-ledger-700 text-paper-300/60 hover:text-paper-300'
+                }`}
+              >
+                Telegram
+              </button>
+              <button
+                onClick={() => { setCanal(CANALES.DISCORD); reiniciar(); }}
+                className={`flex-1 text-xs py-1.5 rounded-sm border font-mono transition-colors ${
+                  canal === CANALES.DISCORD
+                    ? 'bg-purple-500/10 border-purple-400 text-purple-300'
+                    : 'bg-ledger-950 border-ledger-700 text-paper-300/60 hover:text-paper-300'
+                }`}
+              >
+                Discord
+              </button>
+            </div>
+
+            <p className="text-[10px] uppercase tracking-[0.1em] text-paper-300/45 font-mono mb-2">
+              1. Beneficiario que escaneó su sello
+            </p>
+            <select
+              value={beneficiarioId}
+              onChange={(e) => setBeneficiarioId(e.target.value)}
+              disabled={estadoFlujo !== ESTADOS_FLUJO.INICIAL}
+              className="w-full rounded-sm border border-ledger-600 bg-ledger-950 text-paper-200 px-3 py-2 text-sm mb-3 disabled:opacity-50"
+            >
+              <option value="">Seleccionar beneficiario…</option>
+              {beneficiarios.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.nombre} · {b.clubMadres}
+                </option>
+              ))}
+            </select>
+
+            <button
+              onClick={iniciarConversacion}
+              disabled={!beneficiarioId || estadoFlujo !== ESTADOS_FLUJO.INICIAL}
+              className="w-full bg-seal-600 hover:bg-seal-500 disabled:opacity-40 text-paper-100 text-sm py-2.5 rounded-sm transition-colors font-display italic"
+            >
+              Simular escaneo de sello
+            </button>
+
+            {estadoFlujo !== ESTADOS_FLUJO.INICIAL && (
+              <button
+                onClick={reiniciar}
+                className="w-full mt-2 text-[11px] font-mono text-paper-300/45 hover:text-paper-300/80 py-2"
+              >
+                reiniciar simulación
+              </button>
             )}
+          </div>
+
+          <div className="rounded-sm border border-ledger-700 bg-ledger-900 p-5 h-fit">
+            <p className="text-[10px] uppercase tracking-[0.1em] text-paper-300/45 font-mono mb-2">
+              Plan B · {canal === CANALES.WHATSAPP ? 'WhatsApp Real (Whapi)' : canal === CANALES.TELEGRAM ? 'Telegram Real' : 'Discord Real'}
+            </p>
+            <p className="text-xs text-paper-300/60 leading-relaxed mb-4">
+              Registra una sesión real para asociar tu {canal === CANALES.WHATSAPP ? 'número de WhatsApp' : canal === CANALES.TELEGRAM ? 'Telegram Chat ID' : 'Discord User ID'} con el
+              beneficiario seleccionado, y luego envía la foto de evidencia desde tu celular.
+            </p>
+            <div className="space-y-3">
+              <div>
+                <label className="text-[10px] text-paper-300/40 uppercase tracking-wider block mb-1">
+                  {canal === CANALES.WHATSAPP ? 'Número de Celular' : canal === CANALES.TELEGRAM ? 'Telegram Chat ID' : 'Discord User ID'}
+                </label>
+                <input
+                  type="text"
+                  value={numeroReal}
+                  onChange={(e) => setNumeroReal(e.target.value)}
+                  placeholder={canal === CANALES.WHATSAPP ? 'ej: 51999999999' : canal === CANALES.TELEGRAM ? 'ej: 123456789' : 'ej: 987654321012345678'}
+                  className="w-full rounded-sm border border-ledger-600 bg-ledger-950 text-paper-200 px-3 py-1.5 text-sm font-mono focus:border-confirm-400/50 outline-none"
+                />
+              </div>
+              <button
+                onClick={asociarSesionReal}
+                disabled={!beneficiarioId || !numeroReal || cargandoReal}
+                className="w-full bg-confirm-500 hover:bg-confirm-400 disabled:opacity-40 text-ledger-950 text-sm py-2 rounded-sm transition-colors font-display italic font-medium"
+              >
+                {cargandoReal ? 'Asociando...' : 'Asociar Sesión Real'}
+              </button>
+              {mensajeReal && (
+                <p
+                  className={`text-xs mt-2 font-mono ${
+                    mensajeReal.tipo === 'error'
+                      ? 'text-deny-400'
+                      : 'text-confirm-400'
+                  }`}
+                >
+                  {mensajeReal.texto}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
         <div className="rounded-sm border border-ledger-700 bg-ledger-950 overflow-hidden flex flex-col h-[600px]">
           <div className="bg-ledger-800 text-paper-200 px-5 py-3 flex items-center gap-2.5 border-b border-ledger-700">
-            <div className="w-8 h-8 rounded-full bg-confirm-500/20 border border-confirm-400/40 flex items-center justify-center font-mono text-sm text-confirm-300">
-              VC
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-mono text-sm border ${
+              canal === CANALES.WHATSAPP
+                ? 'bg-confirm-500/20 border-confirm-400/40 text-confirm-300'
+                : canal === CANALES.TELEGRAM
+                ? 'bg-seal-500/20 border-seal-400/40 text-seal-300'
+                : 'bg-purple-500/20 border-purple-400/40 text-purple-300'
+            }`}>
+              {canal === CANALES.WHATSAPP ? 'WA' : canal === CANALES.TELEGRAM ? 'TG' : 'DS'}
             </div>
             <div>
               <p className="text-sm text-paper-100 leading-tight">
-                VasoChain · Asistente
+                VasoChain · Bot ({canal === CANALES.WHATSAPP ? 'WhatsApp' : canal === CANALES.TELEGRAM ? 'Telegram' : 'Discord'})
               </p>
               <p className="text-[11px] text-paper-300/45 font-mono">
-                sandbox de whatsapp (simulado)
+                sandbox de {canal} (simulado)
               </p>
             </div>
           </div>
@@ -284,7 +404,7 @@ export default function SimuladorWhatsapp() {
                 para comenzar la conversación.
               </p>
             ) : (
-              mensajes.map((msg) => <BurbujaMensaje key={msg.id} msg={msg} />)
+              mensajes.map((msg) => <BurbujaMensaje key={msg.id} msg={msg} canal={canal} />)
             )}
             <div ref={finChatRef} />
           </div>
@@ -374,12 +494,28 @@ function getSaludoPorHora() {
   }
 }
 
-function generarReporteControlesFrontend(entrega) {
+function generarReporteControlesFrontend(entrega, canal) {
   if (!entrega || !entrega.controlRuns || entrega.controlRuns.length === 0) {
     return '';
   }
 
-  let reportText = `📊 *REPORTE DE VALIDADORES (13 Controles de Arnés):*\n`;
+  let boldStart = '*';
+  let boldEnd = '*';
+  let codeStart = '';
+  let codeEnd = '';
+  if (canal === 'telegram') {
+    boldStart = '<b>';
+    boldEnd = '</b>';
+    codeStart = '<code>';
+    codeEnd = '</code>';
+  } else if (canal === 'discord') {
+    boldStart = '**';
+    boldEnd = '**';
+    codeStart = '`';
+    codeEnd = '`';
+  }
+
+  let reportText = `${boldStart}📊 REPORTE DE VALIDADORES (13 Controles de Arnés):${boldEnd}\n`;
   reportText += `--------------------------------------------------\n`;
 
   const niveles = {
@@ -404,11 +540,11 @@ function generarReporteControlesFrontend(entrega) {
   Object.entries(niveles).forEach(([nivelKey, nivelTitle]) => {
     const runs = controlRunsPorNivel[nivelKey] || [];
     if (runs.length > 0) {
-      reportText += `\n*${nivelTitle}*\n`;
+      reportText += `\n${boldStart}${nivelTitle}${boldEnd}\n`;
       runs.forEach((run) => {
         const checkEmoji = run.resultado ? '✅' : '❌';
         const statusText = run.resultado ? 'PASÓ' : 'FALLÓ';
-        reportText += `• ${checkEmoji} *[${run.control?.identificador}] ${run.control?.descripcion}:* ${statusText} (${run.tiempoMs}ms)\n`;
+        reportText += `• ${checkEmoji} ${boldStart}[${run.control?.identificador}] ${run.control?.descripcion}:${boldEnd} ${statusText} (${codeStart}${run.tiempoMs}ms${codeEnd})\n`;
       });
     }
   });
@@ -424,21 +560,34 @@ function horaActual() {
   });
 }
 
-function formatearMensajeWhatsapp(texto) {
+function formatearMensajeCanal(texto, canal) {
   if (!texto) return '';
   // Escapar HTML básico
   let resultado = texto
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
-  // Reemplazar *negrita* por <strong>
-  resultado = resultado.replace(/\*(.*?)\*/g, '<strong class="font-bold text-paper-100">$1</strong>');
-  // Reemplazar _cursiva_ por <em>
-  resultado = resultado.replace(/_(.*?)_/g, '<em class="italic text-paper-200">$1</em>');
+
+  if (canal === 'telegram') {
+    resultado = resultado
+      .replace(/&lt;b&gt;(.*?)&lt;\/b&gt;/g, '<strong class="font-bold text-paper-100">$1</strong>')
+      .replace(/&lt;i&gt;(.*?)&lt;\/i&gt;/g, '<em class="italic text-paper-200">$1</em>')
+      .replace(/&lt;code&gt;(.*?)&lt;\/code&gt;/g, '<code class="bg-ledger-800 border border-ledger-700 px-1 py-0.5 rounded font-mono text-confirm-300 text-[11px]">$1</code>');
+  } else if (canal === 'discord') {
+    resultado = resultado
+      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-paper-100">$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em class="italic text-paper-200">$1</em>')
+      .replace(/`(.*?)`/g, '<code class="bg-ledger-800 border border-ledger-700 px-1 py-0.5 rounded font-mono text-confirm-300 text-[11px]">$1</code>');
+  } else {
+    // WhatsApp
+    resultado = resultado
+      .replace(/\*(.*?)\*/g, '<strong class="font-bold text-paper-100">$1</strong>')
+      .replace(/_(.*?)_/g, '<em class="italic text-paper-200">$1</em>');
+  }
   return <span dangerouslySetInnerHTML={{ __html: resultado }} />;
 }
 
-function BurbujaMensaje({ msg }) {
+function BurbujaMensaje({ msg, canal }) {
   const esBot = msg.de === 'bot';
   return (
     <div className={`flex ${esBot ? 'justify-start' : 'justify-end'} animate-fade-in`}>
@@ -458,7 +607,7 @@ function BurbujaMensaje({ msg }) {
         )}
         {msg.texto && (
           <p className="leading-relaxed whitespace-pre-wrap font-sans">
-            {formatearMensajeWhatsapp(msg.texto)}
+            {formatearMensajeCanal(msg.texto, canal)}
           </p>
         )}
         <div className="flex items-center justify-end gap-1 mt-1.5 select-none">

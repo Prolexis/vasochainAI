@@ -8,7 +8,7 @@ import { BlockchainService } from '../blockchain/blockchain.service';
 import { HarnessService } from '../harness/harness.service';
 
 // Tipo declarado localmente (Prisma lo genera automáticamente en producción)
-type OrigenEntrega = 'simulado' | 'whatsapp_real';
+type OrigenEntrega = 'simulado' | 'whatsapp_real' | 'telegram_real' | 'discord_real';
 
 interface ProcesarEntregaInput {
   beneficiarioId: string;

@@ -7,6 +7,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-vasochain}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vasochain}
       POSTGRES_DB: ${POSTGRES_DB:-vasochain}
+      TZ: America/Lima
     ports:
       - "5433:5432"
     volumes:
@@ -24,6 +25,8 @@ services:
       context: ./blockchain
     container_name: vasochain-hardhat
     restart: unless-stopped
+    environment:
+      TZ: America/Lima
     ports:
       - "8545:8545"
     volumes:
@@ -49,6 +52,7 @@ services:
       BLOCKCHAIN_RPC_URL: http://hardhat-node:8545
       CONTRACT_SHARED_PATH: /shared/contract.json
       PORT: 3000
+      TZ: America/Lima
     ports:
       - "3001:3000"
     volumes:
