@@ -116,29 +116,42 @@ La primera vez puede tardar varios minutos.
 3. **Enviar Foto**: Adjunta una imagen (idealmente de comida/víveres)
 4. **Ver Resultado**: Consulta el "Panel General" o "Entregas" para ver la entrega validada y registrada en la blockchain
 
-### Plan B: WhatsApp Real con Whapi.Cloud
+### Plan B: Integración de Bots Reales (WhatsApp, Telegram y Discord)
 
-#### 1. Configurar Whapi.Cloud
-- Añade `WHAPI_TOKEN` y `WHAPI_API_URL` a tu `.env`
+Para probar la interacción directa desde tu teléfono celular utilizando cuentas y canales reales:
 
-#### 2. Exponer backend con Cloudflare Tunnel
-El túnel se levanta automáticamente con Docker Compose. Para obtener tu URL pública autogenerada, ejecuta:
+#### 1. Configurar Variables de Entorno (`.env`)
+Añade las credenciales de las plataformas que desees probar en tu archivo `.env`:
+
+* **WhatsApp (Whapi.Cloud):**
+  * `WHAPI_TOKEN=tu_token_de_whapi_aqui`
+  * `WHAPI_API_URL=https://gate.whapi.cloud`
+* **Telegram Bot:**
+  * `TELEGRAM_BOT_TOKEN=tu_token_de_telegram_bot_aqui` (Creado en [@BotFather](https://t.me/BotFather) usando `/newbot`).
+* **Discord Bot:**
+  * `DISCORD_BOT_TOKEN=tu_token_de_discord_bot_aqui` (Creado en el [Discord Developer Portal](https://discord.com/developers/applications)).
+  * **Intents Requeridos:** En la pestaña **Bot** de tu aplicación en Discord, activa el interruptor **Message Content Intent** (bajo *Privileged Gateway Intents*) para que el bot pueda leer las fotos adjuntas en DMs.
+
+#### 2. Reiniciar el Backend
+Una vez guardadas las variables en tu `.env`, reinicia el backend de Docker para cargar los cambios:
 ```bash
-docker compose logs tunnel
+docker compose restart backend
 ```
 
-#### 3. Configurar Webhook en Whapi.Cloud
-- En tu panel de Whapi.Cloud, configura tu webhook apuntando a:
-  `https://TU-URL-DE-TUNNEL.trycloudflare.com/whatsapp/webhook`
+#### 3. Guía de Pruebas: Telegram Bot Real
+1. Abre Telegram y busca tu bot. Escríbele cualquier mensaje o el comando `/start`.
+2. El bot te responderá de forma automática indicándote tu **Telegram Chat ID** (un número de 9-10 dígitos, ej: `873629064`).
+3. Abre el **Simulador Web** (`http://localhost:5174/simulador`), selecciona el canal **Telegram**, elige al beneficiario deseado, escribe tu Chat ID obtenido en la casilla **TELEGRAM CHAT ID** (Plan B) y haz clic en **Asociar Sesión Real**.
+4. Recibirás un mensaje directo (DM) de bienvenida proactivo en tu Telegram.
+5. Envía una foto de alimentos desde Telegram. El bot la procesará por el arnés de 13 controles, la registrará en la Blockchain y te responderá directamente en Telegram con el reporte formateado en HTML.
 
-#### 4. Asociar número
-Realiza una solicitud `POST /whatsapp/iniciar-sesion` con:
-```json
-{
-  "numeroWhatsapp": "51999999999",
-  "beneficiarioId": "ID_DEL_BENEFICIARIO"
-}
-```
+#### 4. Guía de Pruebas: Discord Bot Real
+1. Invita a tu bot de Discord a tu servidor (genera la URL de invitación en **OAuth2 -> URL Generator** marcando el scope `bot` y los permisos `Send Messages`, `Attach Files` y `Read Message History`).
+2. En Discord, ve a **Ajustes de Usuario -> Avanzado** y activa el **Modo Desarrollador**.
+3. Haz clic derecho sobre tu foto de perfil en cualquier chat y selecciona **Copiar ID** para obtener tu **Discord User ID** (un identificador largo de 18 dígitos, ej: `987654321012345678`).
+4. Abre el simulador en tu navegador, selecciona el canal **Discord**, ingresa tu ID en la casilla **DISCORD USER ID** (Plan B) y haz clic en **Asociar Sesión Real**.
+5. Recibirás un mensaje directo (DM) de bienvenida en Discord.
+6. Envía una foto de alimentos en el chat privado con tu bot. Recibirás el reporte de los 13 controles formateado en Markdown de Discord.
 
 ## Estructura del Proyecto
 
