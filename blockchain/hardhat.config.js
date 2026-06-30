@@ -1,9 +1,13 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
 
 /**
  * Configuración de Hardhat para VasoChain AI.
- * El nodo se levanta en 0.0.0.0:8545 dentro del contenedor para que
- * el servicio "backend" pueda conectarse vía la red interna de Docker.
+ *
+ * Redes disponibles:
+ * - hardhat/localhost: nodo local efímero, solo para pruebas rápidas.
+ * - zksys: zkSYS Testnet (zkTanenbaum) pública y real. Explorer:
+ *   https://explorer-zk.tanenbaum.io · Faucet: https://faucet-zk.tanenbaum.io
  */
 module.exports = {
   solidity: {
@@ -22,6 +26,12 @@ module.exports = {
     localhost: {
       url: "http://127.0.0.1:8545",
       chainId: 31337,
+    },
+    zksys: {
+      url: process.env.BLOCKCHAIN_RPC_URL || "https://rpc-zk.tanenbaum.io",
+      accounts: process.env.BLOCKCHAIN_PRIVATE_KEY
+        ? [process.env.BLOCKCHAIN_PRIVATE_KEY]
+        : [],
     },
   },
   paths: {
