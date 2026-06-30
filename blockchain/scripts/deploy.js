@@ -20,7 +20,7 @@ async function main() {
 
   const artifact = await hre.artifacts.readArtifact("DeliveryRegistry");
 
-  const sharedDir = "/shared";
+   const sharedDir = path.resolve(__dirname, "..", "..", "shared");
   if (!fs.existsSync(sharedDir)) {
     fs.mkdirSync(sharedDir, { recursive: true });
   }
@@ -36,7 +36,7 @@ async function main() {
     JSON.stringify(output, null, 2)
   );
 
-  console.log(`Direccion y ABI escritas en ${sharedDir}/contract.json`);
+    console.log(`Direccion y ABI escritas en ${sharedDir}\\contract.json`);
 }
 
 main().catch((error) => {

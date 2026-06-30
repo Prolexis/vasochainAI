@@ -14,6 +14,7 @@ import { BlockchainModule } from './blockchain/blockchain.module';
 import { ControlesModule } from './controles/controles.module';
 import { HarnessModule } from './harness/harness.module';
 import { AuthModule } from './auth/auth.module';
+import { BotsModule } from './bots/bots.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AuthModule } from './auth/auth.module';
       rootPath: join(process.cwd(), 'uploads'),
       serveRoot: '/uploads',
     }),
+    BotsModule,
     PrismaModule,
     AuthModule,
     BeneficiariosModule,
