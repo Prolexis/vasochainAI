@@ -6,7 +6,7 @@ const enlaces = [
   { to: '/', label: 'Panel general', folio: '01' },
   { to: '/beneficiarios', label: 'Beneficiarios', folio: '02' },
   { to: '/entregas', label: 'Entregas', folio: '03' },
-  { to: '/simulador', label: 'Simulador WhatsApp', folio: '04' },
+  { to: '/simulador', label: 'Simulador Multicanal', folio: '04' },
   { to: '/controles', label: 'Gestión de Controles', folio: '05' },
   { to: '/controles/menu', label: 'Modo Menú', folio: '06' },
   { to: '/controles/dashboard', label: 'Dashboard Controles', folio: '07' },
