@@ -44,8 +44,8 @@ export default function ModoMenu() {
     return (
       <div className="flex items-center justify-center min-h-[70vh]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-24 w-24 border-4 border-emerald-400 border-t-transparent mx-auto mb-8"></div>
-          <p className="text-paper-400 text-xl">Preparando modo menú...</p>
+          <div className="animate-spin rounded-full h-20 w-20 border-4 border-confirm-400 border-t-transparent mx-auto mb-8"></div>
+          <p className="text-paper-300/60 text-lg font-mono">Preparando modo menú…</p>
         </div>
       </div>
     );
@@ -57,7 +57,7 @@ export default function ModoMenu() {
         <h1 id="menu-title" className="text-5xl font-display font-bold gradient-text mb-4">
           🎯 Modo Menú
         </h1>
-        <p className="text-paper-400 text-xl">
+        <p className="text-paper-300/60 text-lg">
           Acceso rápido y estructurado a todos tus controles operativos
         </p>
       </div>
@@ -76,7 +76,7 @@ export default function ModoMenu() {
             placeholder="Busca cualquier control..."
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
-            className="w-full bg-gradient-to-r from-ledger-900 to-ledger-950 border-2 border-ledger-600 rounded-[32px] px-24 py-7 text-paper-200 text-xl focus:outline-none focus:border-emerald-400 focus:ring-8 focus:ring-emerald-400/20 transition-all duration-300 shadow-soft-xl"
+            className="w-full bg-gradient-to-r from-ledger-900 to-ledger-950 border-2 border-ledger-600 rounded-[32px] px-24 py-7 text-paper-200 text-xl focus:outline-none focus:border-confirm-400 focus:ring-8 focus:ring-confirm-400/20 transition-all duration-300 shadow-soft-xl"
             aria-label="Buscar controles"
           />
           {busqueda && (

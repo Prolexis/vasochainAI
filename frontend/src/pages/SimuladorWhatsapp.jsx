@@ -428,7 +428,7 @@ export default function SimuladorWhatsapp() {
             </div>
 
             <p className="text-[10px] uppercase tracking-[0.12em] text-paper-300/50 font-mono mb-2 block">
-              1. Selección de Beneficiario
+              1. Seleccionar Beneficiario Objetivo
             </p>
             <select
               value={beneficiarioId}
@@ -449,7 +449,7 @@ export default function SimuladorWhatsapp() {
               disabled={!beneficiarioId || estadoFlujo !== ESTADOS_FLUJO.INICIAL}
               className="w-full bg-seal-600 hover:bg-seal-500 disabled:opacity-40 text-paper-100 text-sm py-3 rounded-xl transition-all font-display italic font-medium hover:scale-[1.02] active:scale-95 shadow-md"
             >
-              Simular escaneo de sello
+              Iniciar Simulación del Bot
             </button>
 
             {estadoFlujo !== ESTADOS_FLUJO.INICIAL && (
@@ -847,15 +847,25 @@ function BurbujaMensaje({ msg, canal, onOpcionClick }) {
         )}
         {msg.opciones && (
           <div className="mt-3.5 flex flex-wrap gap-2">
-            {msg.opciones.map((opc) => (
-              <button
-                key={opc.id}
-                onClick={() => onOpcionClick && onOpcionClick(opc)}
-                className="bg-ledger-900 hover:bg-ledger-950 border border-ledger-700 text-paper-200 hover:text-paper-100 text-[11px] px-3.5 py-2 rounded-xl transition-all font-sans font-semibold active:scale-95 shadow-sm"
-              >
-                {opc.label}
-              </button>
-            ))}
+            {msg.opciones.map((opc) => {
+              let brandBtnClass = '';
+              if (canal === 'whatsapp') {
+                brandBtnClass = 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/20 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-300';
+              } else if (canal === 'telegram') {
+                brandBtnClass = 'bg-sky-500/10 hover:bg-sky-500/20 border-sky-500/20 dark:border-sky-500/30 text-sky-800 dark:text-sky-300';
+              } else {
+                brandBtnClass = 'bg-indigo-500/10 hover:bg-indigo-500/20 border-indigo-500/20 dark:border-indigo-500/30 text-indigo-800 dark:text-indigo-300';
+              }
+              return (
+                <button
+                  key={opc.id}
+                  onClick={() => onOpcionClick && onOpcionClick(opc)}
+                  className={`border text-[11px] px-3.5 py-2 rounded-xl transition-all font-sans font-semibold active:scale-95 shadow-sm ${brandBtnClass}`}
+                >
+                  {opc.label}
+                </button>
+              );
+            })}
           </div>
         )}
         <div className="flex items-center justify-end gap-1 mt-2 select-none">

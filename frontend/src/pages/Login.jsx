@@ -29,46 +29,46 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-ledger-900 to-ledger-950 flex items-center justify-center p-4">
-      <div className="bg-ledger-900 border border-ledger-700 rounded-3xl p-10 shadow-soft-xl w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-ledger-950 to-ledger-900 flex items-center justify-center p-4">
+      <div className="glass-card glass-border rounded-[2rem] p-10 shadow-soft-xl w-full max-w-md">
         <div className="text-center mb-10">
           <div className="relative w-24 h-24 mx-auto mb-6">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 animate-pulse"></div>
-            <div className="absolute inset-2 rounded-full border-2 border-emerald-400/50 flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-confirm-500 to-confirm-600 animate-pulse opacity-20"></div>
+            <div className="absolute inset-2 rounded-full border-2 border-confirm-400/50 flex items-center justify-center">
               <span className="font-display italic text-paper-100 text-4xl leading-none">V</span>
             </div>
           </div>
-          <h1 className="text-4xl font-display font-bold text-paper-100">VasoChain AI</h1>
-          <p className="text-paper-400 mt-3 text-lg">Inicia sesión en tu cuenta</p>
+          <h1 className="text-4xl font-display font-bold text-paper-100 tracking-tight">VasoChain AI</h1>
+          <p className="text-paper-300/60 mt-3 text-sm">Inicia sesión en tu cuenta operativa</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label className="block text-paper-300 text-sm font-medium mb-3">Correo Electrónico</label>
+            <label className="block text-paper-300/80 text-xs font-semibold uppercase tracking-wider mb-2.5">Correo Electrónico</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-ledger-950/50 border border-ledger-600 rounded-2xl px-5 py-4 text-paper-200 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all"
+              className="w-full bg-ledger-950/50 border border-ledger-600 rounded-2xl px-5 py-4 text-paper-200 focus:outline-none focus:border-confirm-400/70 focus:ring-4 focus:ring-confirm-400/10 transition-all font-sans text-sm"
               placeholder="admin@vasochain.com"
               required
             />
           </div>
 
           <div>
-            <label className="block text-paper-300 text-sm font-medium mb-3">Contraseña</label>
+            <label className="block text-paper-300/80 text-xs font-semibold uppercase tracking-wider mb-2.5">Contraseña</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-ledger-950/50 border border-ledger-600 rounded-2xl px-5 py-4 text-paper-200 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all"
+              className="w-full bg-ledger-950/50 border border-ledger-600 rounded-2xl px-5 py-4 text-paper-200 focus:outline-none focus:border-confirm-400/70 focus:ring-4 focus:ring-confirm-400/10 transition-all font-sans text-sm"
               placeholder="••••••••"
               required
             />
           </div>
 
           {error && (
-            <div className="p-5 rounded-2xl bg-red-900/30 border border-red-700/50 text-red-100">
+            <div className="p-4 rounded-2xl bg-red-950/10 dark:bg-red-900/10 border border-deny-500/25 text-deny-500 dark:text-deny-400 text-xs font-mono">
               {error}
             </div>
           )}
@@ -76,16 +76,16 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50 disabled:cursor-not-allowed text-white py-5 rounded-2xl font-semibold text-lg transition-all shadow-soft-xl"
+            className="w-full bg-confirm-500 hover:bg-confirm-400 disabled:opacity-50 disabled:cursor-not-allowed text-ledger-950 py-4 rounded-2xl font-bold font-display italic text-base transition-all hover:scale-[1.02] active:scale-98 shadow-md"
           >
             {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
           </button>
         </form>
 
-        <div className="mt-8 text-center text-paper-400 text-sm">
+        <div className="mt-8 text-center text-paper-300/40 text-xs font-mono">
           <p>Credenciales de prueba:</p>
-          <p className="font-mono mt-2">Email: admin@vasochain.com</p>
-          <p className="font-mono">Password: admin123</p>
+          <p className="mt-2 text-paper-300/60">Email: admin@vasochain.com</p>
+          <p className="text-paper-300/60">Password: admin123</p>
         </div>
       </div>
     </div>
