@@ -274,24 +274,9 @@ export default function Login() {
           </form>
 
           {/* Nota de Confianza bajo el botón */}
-          <div className="flex items-center justify-center gap-2 text-[11px] font-mono text-paper-300/50 pt-1">
+          <div className="flex items-center justify-center gap-2 text-[11px] font-mono text-paper-300/50 pt-2">
             <span>🔒</span>
             <span>Conexión segura · Registro cifrado en blockchain</span>
-          </div>
-
-          {/* Footer de Credenciales Demo para Hackathon */}
-          <div className="pt-4 border-t border-ledger-700/60 flex items-center justify-between text-xs font-mono">
-            <div className="flex items-center gap-2 text-paper-300/60">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span>admin@vasochain.com</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleQuickFill('admin@vasochain.com', 'admin123')}
-              className="text-emerald-400 hover:text-emerald-300 font-bold underline cursor-pointer transition-colors"
-            >
-              Cargar Credenciales
-            </button>
           </div>
 
         </div>
