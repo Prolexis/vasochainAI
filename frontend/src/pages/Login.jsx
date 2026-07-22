@@ -7,6 +7,7 @@ import loginHeroImg from '../assets/login-hero.png';
 export default function Login() {
   const [email, setEmail] = useState('admin@vasochain.com');
   const [password, setPassword] = useState('admin123');
+  const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -71,7 +72,7 @@ export default function Login() {
         </button>
       </div>
 
-      {/* 3. COLUMNA IZQUIERDA (50% en escritorio / ~38vh en móvil): Fotografía Real + Ken Burns + Chips de Estadísticas */}
+      {/* 3. COLUMNA IZQUIERDA (50% en escritorio / ~38vh en móvil): Fotografía Real + Ken Burns + Sello Institucional */}
       <div className="relative h-[38vh] lg:h-full lg:min-h-screen w-full overflow-hidden flex flex-col justify-between p-6 sm:p-8 lg:p-12 z-0 shrink-0 select-none">
         
         {/* Imagen Real con Zoom Lento Continuo (Ken Burns) */}
@@ -81,27 +82,38 @@ export default function Login() {
           className="absolute inset-0 w-full h-full object-cover object-center animate-kenburns pointer-events-none" 
         />
 
-        {/* Overlay de Gradiente Vertical Oscuro (Más denso arriba y abajo, transparente al centro) */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/30 to-black/90 z-10 pointer-events-none" />
+        {/* Overlay de Gradiente Vertical Oscuro */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/35 to-black/95 z-10 pointer-events-none" />
 
         {/* Textura de Grano Sutil Superpuesta */}
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] z-10 pointer-events-none mix-blend-overlay" />
 
-        {/* Header Marca con Glow Pulsante */}
-        <div className="relative z-20 flex items-center gap-3.5 animate-fadeIn">
-          <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-emerald-400 to-amber-400 p-0.5 shadow-2xl shrink-0">
-            <div className="w-full h-full rounded-[14px] bg-slate-950 flex items-center justify-center">
-              <span className="font-display italic text-white text-2xl font-bold">V</span>
+        {/* Header Marca + Sello de Confianza Institucional */}
+        <div className="relative z-20 space-y-3 animate-fadeIn">
+          <div className="flex items-center gap-3.5">
+            <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-emerald-400 to-amber-400 p-0.5 shadow-2xl shrink-0">
+              <div className="w-full h-full rounded-[14px] bg-slate-950 flex items-center justify-center">
+                <span className="font-display italic text-white text-2xl font-bold">V</span>
+              </div>
+              <span className="absolute -inset-1 rounded-2xl bg-emerald-500/30 blur-md animate-pulse pointer-events-none" />
             </div>
-            <span className="absolute -inset-1 rounded-2xl bg-emerald-500/30 blur-md animate-pulse pointer-events-none" />
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-display font-black text-white tracking-tight leading-none drop-shadow-lg">
+                VasoChain <span className="text-emerald-400">AI</span>
+              </h1>
+              <p className="text-xs font-mono text-slate-200/90 mt-1 tracking-wider font-semibold drop-shadow">
+                Programa Vaso de Leche · Trujillo
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-display font-black text-white tracking-tight leading-none drop-shadow-lg">
-              VasoChain <span className="text-emerald-400">AI</span>
-            </h1>
-            <p className="text-xs font-mono text-slate-200/90 mt-1 tracking-wider font-semibold drop-shadow">
-              Programa Vaso de Leche · Trujillo
-            </p>
+
+          {/* Sello de Confianza Institucional Justo Debajo del Header */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-950/80 border border-emerald-400/40 text-emerald-300 text-xs font-mono font-semibold shadow-lg backdrop-blur-md">
+            <svg className="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span>Verificado por la Municipalidad de Trujillo</span>
           </div>
         </div>
 
@@ -150,15 +162,19 @@ export default function Login() {
         {/* Glow Radial Verde Esmeralda detrás del formulario */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none" />
 
-        <div className="w-full max-w-[420px] space-y-7 my-auto py-6 relative z-10">
+        <div className="w-full max-w-[420px] space-y-8 my-auto py-6 relative z-10">
           
-          {/* Eyebrow Pequeño + Encabezado */}
-          <div className="space-y-2.5">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold tracking-widest uppercase">
-              <span>🛡️</span>
+          {/* Eyebrow con Ícono de Huella Digital + Título con Aire Generoso */}
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold tracking-widest uppercase">
+              <svg className="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 11c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 2c0-3.3-2.7-6-6-6s-6 2.7-6 6c0 1.2.4 2.3 1 3.2.3.5.7.9 1.1 1.3 1.1 1.1 2.5 1.8 3.9 1.8s2.8-.7 3.9-1.8c.4-.4.8-.8 1.1-1.3.6-.9 1-2 1-3.2z"/>
+                <path d="M12 2a10 10 0 0 0-10 10c0 2.2.7 4.3 2 6"/>
+                <path d="M22 12a10 10 0 0 0-3.2-7.3"/>
+              </svg>
               <span>PANEL DE OPERADOR</span>
             </div>
-            <h2 className="text-3xl lg:text-4xl font-black text-paper-100 font-display tracking-tight leading-none">
+            <h2 className="text-3xl lg:text-4xl font-black text-paper-100 font-display tracking-tight leading-none pt-1">
               Iniciar Sesión
             </h2>
             <p className="text-xs font-mono text-paper-300/60 leading-relaxed">
@@ -200,7 +216,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={handleForgotPass}
-                  className="text-[11px] font-mono text-emerald-400 hover:text-emerald-300 hover:underline transition-all cursor-pointer"
+                  className="text-[11px] font-mono text-emerald-400 hover:text-emerald-300 underline decoration-emerald-400/50 hover:decoration-emerald-300 underline-offset-4 transition-all cursor-pointer"
                 >
                   ¿Olvidaste tu contraseña?
                 </button>
@@ -239,6 +255,19 @@ export default function Login() {
               </div>
             </div>
 
+            {/* Checkbox Recordarme */}
+            <div className="flex items-center justify-between pt-0.5">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none text-xs font-mono text-paper-300/80 hover:text-paper-100 transition-colors">
+                <input 
+                  type="checkbox" 
+                  checked={rememberMe} 
+                  onChange={(e) => setRememberMe(e.target.checked)} 
+                  className="w-4 h-4 rounded border-ledger-700 bg-ledger-950 text-emerald-500 focus:ring-emerald-500/20 cursor-pointer accent-emerald-500" 
+                />
+                <span>Recordar sesión</span>
+              </label>
+            </div>
+
             {error && (
               <div className="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 shrink-0 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -248,11 +277,11 @@ export default function Login() {
               </div>
             )}
 
-            {/* Botón Primario con Gradiente Animado Shimmer */}
+            {/* Botón Primario con Micro-interacción de la Flecha */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white py-4 rounded-2xl font-bold font-display text-base tracking-wide transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer btn-shimmer"
+              className="group w-full mt-2 bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white py-4 rounded-2xl font-bold font-display text-base tracking-wide transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer btn-shimmer"
             >
               {loading ? (
                 <div className="flex items-center gap-2">
@@ -265,7 +294,7 @@ export default function Login() {
               ) : (
                 <>
                   <span>Ingresar al Sistema</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 group-hover:translate-x-1.5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </>
@@ -274,9 +303,24 @@ export default function Login() {
           </form>
 
           {/* Nota de Confianza bajo el botón */}
-          <div className="flex items-center justify-center gap-2 text-[11px] font-mono text-paper-300/50 pt-2">
+          <div className="flex items-center justify-center gap-2 text-[11px] font-mono text-paper-300/50 pt-1">
             <span>🔒</span>
             <span>Conexión segura · Registro cifrado en blockchain</span>
+          </div>
+
+          {/* Footer de Credenciales Demo para la Hackathon */}
+          <div className="pt-4 border-t border-ledger-700/60 flex items-center justify-between text-xs font-mono">
+            <div className="flex items-center gap-2 text-paper-300/60">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span>admin@vasochain.com</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleQuickFill('admin@vasochain.com', 'admin123')}
+              className="text-emerald-400 hover:text-emerald-300 font-bold underline decoration-emerald-400/50 hover:decoration-emerald-300 underline-offset-4 cursor-pointer transition-all"
+            >
+              Cargar Credenciales
+            </button>
           </div>
 
         </div>
@@ -286,6 +330,7 @@ export default function Login() {
     </div>
   );
 }
+
 
 
 
