@@ -1,4 +1,14 @@
-const API_URL = import.meta.env.VITE_API_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3001' : '');
+function obtenerApiUrl() {
+  if (typeof window === 'undefined') return 'http://localhost:3001';
+  if (window.location.protocol === 'https:') return '';
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:3001';
+  }
+  return '';
+}
+
+const API_URL = obtenerApiUrl();
+
 
 
 async function manejarRespuesta(res) {
