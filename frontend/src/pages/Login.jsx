@@ -40,7 +40,7 @@ export default function Login() {
       <div className="absolute top-6 right-6 z-50">
         <button
           onClick={toggleTheme}
-          className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-ledger-900/80 border border-ledger-700 hover:border-confirm-400/50 text-paper-100 text-xs font-medium tracking-wide shadow-md backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-ledger-900/90 border border-ledger-700 hover:border-confirm-400/50 text-paper-100 text-xs font-medium tracking-wide shadow-md backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
         >
           {theme === 'dark' ? (
             <>
@@ -64,47 +64,48 @@ export default function Login() {
       </div>
 
       {/* Contenedor Principal Esencial */}
-      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 rounded-[2rem] border border-ledger-700 bg-ledger-900 shadow-2xl overflow-hidden backdrop-blur-xl z-10">
+      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 rounded-[2rem] border border-ledger-700 bg-ledger-900 shadow-2xl overflow-hidden backdrop-blur-xl z-10">
         
-        {/* Lado Izquierdo: Imagen del Programa y Branding Esencial */}
-        <div className="lg:col-span-6 relative flex flex-col justify-between p-6 sm:p-8 lg:p-10 border-b lg:border-b-0 lg:border-r border-ledger-700 bg-ledger-950/60">
+        {/* Lado Izquierdo: Fotografía Real de Fondo Completo (Full Bleed) */}
+        <div className="lg:col-span-6 min-h-[380px] lg:min-h-[580px] relative flex flex-col justify-between p-6 sm:p-8 lg:p-10 overflow-hidden">
           
-          {/* Header Marca */}
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-confirm-500 to-seal-500 p-0.5 shadow-md shrink-0">
-              <div className="w-full h-full rounded-[10px] bg-ledger-950 flex items-center justify-center">
-                <span className="font-display italic text-paper-100 text-2xl font-bold">V</span>
+          {/* Imagen de fondo cubriendo todo el lado izquierdo */}
+          <img 
+            src={loginHeroImg} 
+            alt="Programa Vaso de Leche Trujillo" 
+            className="absolute inset-0 w-full h-full object-cover object-center" 
+          />
+
+          {/* Sombra de oscurecimiento suave para legibilidad del texto */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/60 z-0" />
+
+          {/* Header Marca Flotante */}
+          <div className="relative z-10 flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-confirm-500 to-seal-500 p-0.5 shadow-xl shrink-0">
+              <div className="w-full h-full rounded-[10px] bg-slate-950/90 flex items-center justify-center">
+                <span className="font-display italic text-white text-2xl font-bold">V</span>
               </div>
             </div>
             <div>
-              <h1 className="text-2xl font-display font-bold text-paper-100 tracking-tight leading-none">
-                VasoChain <span className="gradient-text">AI</span>
+              <h1 className="text-2xl font-display font-bold text-white tracking-tight leading-none drop-shadow-md">
+                VasoChain <span className="text-emerald-400">AI</span>
               </h1>
-              <p className="text-[11px] font-mono text-paper-300/60 mt-1">
+              <p className="text-[11px] font-mono text-slate-200/90 mt-1 font-medium drop-shadow">
                 Programa Vaso de Leche · Trujillo
               </p>
             </div>
           </div>
 
-          {/* Imagen Limpia sin textos sobrepuestos */}
-          <div className="my-6 rounded-2xl border border-ledger-700 overflow-hidden shadow-lg">
-            <img 
-              src={loginHeroImg} 
-              alt="Programa Vaso de Leche" 
-              className="w-full h-52 lg:h-60 object-cover object-center" 
-            />
-          </div>
-
-          {/* Pie informativo esencial */}
-          <div className="flex items-center gap-2 text-xs font-mono text-paper-300/60">
-            <span className="w-2 h-2 rounded-full bg-confirm-400 shrink-0" />
-            <span>Supervisión & Trazabilidad Municipal</span>
+          {/* Pie Informativo Flotante */}
+          <div className="relative z-10 flex items-center gap-2.5 text-xs font-mono text-white/90 drop-shadow">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span className="font-semibold">Supervisión & Trazabilidad Municipal</span>
           </div>
 
         </div>
 
         {/* Lado Derecho: Formulario de Inicio de Sesión Limpio */}
-        <div className="lg:col-span-6 flex flex-col justify-center p-6 sm:p-8 lg:p-10 bg-ledger-900/40">
+        <div className="lg:col-span-6 flex flex-col justify-center p-6 sm:p-8 lg:p-10 bg-ledger-900/50">
           
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-paper-100 font-display">Iniciar Sesión</h2>
@@ -154,7 +155,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-paper-300/50 hover:text-paper-100 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-paper-300/50 hover:text-paper-100 transition-colors cursor-pointer"
                 >
                   {showPassword ? (
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -211,6 +212,7 @@ export default function Login() {
     </div>
   );
 }
+
 
 
 
