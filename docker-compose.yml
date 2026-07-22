@@ -91,7 +91,7 @@ services:
     image: cloudflare/cloudflared:latest
     container_name: vasochain-ngrok
     restart: unless-stopped
-    command: tunnel --url http://backend:3000
+    command: tunnel --protocol http2 --url http://backend:3000
     depends_on:
       backend:
         condition: service_healthy
