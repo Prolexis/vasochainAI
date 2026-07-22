@@ -30,7 +30,7 @@ services:
     ports:
       - "8545:8545"
     volumes:
-      - contract_artifacts:/shared
+      - ./shared:/shared
     healthcheck:
       test: ["CMD", "test", "-f", "/shared/contract.json"]
       interval: 5s
@@ -49,14 +49,14 @@ services:
       - .env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-vasochain}:${POSTGRES_PASSWORD:-vasochain}@postgres:5432/${POSTGRES_DB:-vasochain}
-      BLOCKCHAIN_RPC_URL: http://hardhat-node:8545
+      BLOCKCHAIN_RPC_URL: ${BLOCKCHAIN_RPC_URL:-https://rpc-zk.tanenbaum.io}
       CONTRACT_SHARED_PATH: /shared/contract.json
       PORT: 3000
       TZ: America/Lima
     ports:
       - "3001:3000"
     volumes:
-      - contract_artifacts:/shared:ro
+      - ./shared:/shared:ro
       - backend_uploads:/app/uploads
     depends_on:
       postgres:
@@ -104,5 +104,4 @@ networks:
 
 volumes:
   postgres_data:
-  contract_artifacts:
   backend_uploads:
