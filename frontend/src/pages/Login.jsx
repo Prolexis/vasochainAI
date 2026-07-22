@@ -207,20 +207,11 @@ export default function Login() {
               </div>
             </div>
 
-            {/* Campo Contraseña + Olvidaste tu contraseña */}
+            {/* Campo Contraseña */}
             <div className="space-y-2 group">
-              <div className="flex items-center justify-between">
-                <label className="block text-paper-300/80 text-[11px] font-mono uppercase tracking-widest font-semibold">
-                  CONTRASEÑA
-                </label>
-                <button
-                  type="button"
-                  onClick={handleForgotPass}
-                  className="text-[11px] font-mono text-emerald-400 hover:text-emerald-300 underline decoration-emerald-400/50 hover:decoration-emerald-300 underline-offset-4 transition-all cursor-pointer"
-                >
-                  ¿Olvidaste tu contraseña?
-                </button>
-              </div>
+              <label className="block text-paper-300/80 text-[11px] font-mono uppercase tracking-widest font-semibold">
+                CONTRASEÑA
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-paper-300/40 group-focus-within:text-emerald-400 transition-colors duration-300">
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -303,24 +294,9 @@ export default function Login() {
           </form>
 
           {/* Nota de Confianza bajo el botón */}
-          <div className="flex items-center justify-center gap-2 text-[11px] font-mono text-paper-300/50 pt-1">
+          <div className="flex items-center justify-center gap-2 text-[11px] font-mono text-paper-300/50 pt-2">
             <span>🔒</span>
             <span>Conexión segura · Registro cifrado en blockchain</span>
-          </div>
-
-          {/* Footer de Credenciales Demo para la Hackathon */}
-          <div className="pt-4 border-t border-ledger-700/60 flex items-center justify-between text-xs font-mono">
-            <div className="flex items-center gap-2 text-paper-300/60">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span>admin@vasochain.com</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleQuickFill('admin@vasochain.com', 'admin123')}
-              className="text-emerald-400 hover:text-emerald-300 font-bold underline decoration-emerald-400/50 hover:decoration-emerald-300 underline-offset-4 cursor-pointer transition-all"
-            >
-              Cargar Credenciales
-            </button>
           </div>
 
         </div>
