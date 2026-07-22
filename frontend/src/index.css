@@ -255,6 +255,30 @@ input[type="checkbox"]:checked + div {
   animation: shimmer 3s infinite linear;
 }
 
+/* Patrón de puntos Dot Grid */
+.bg-dot-grid {
+  background-image: radial-gradient(rgba(16, 185, 129, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dark .bg-dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Gradiente animado para la barra de acento superior */
+@keyframes flow-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-flow-bar {
+  background-size: 200% 200%;
+  animation: flow-gradient 6s ease infinite;
+}
+
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
