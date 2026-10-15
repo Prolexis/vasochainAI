@@ -15,13 +15,12 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const login = async (email, password) => {
-    console.log('Auth.login() llamado con:', { email, password });
+  const login = async (email, password, remember = true) => {
+    console.log('Auth.login() llamado con:', { email, password, remember });
     const data = await api.login(email, password);
     console.log('API.login() devolvió:', data);
-    api.setAuthToken(data.access_token);
-    api.setUser(data.user);
-    console.log('Datos guardados en localStorage, user:', data.user);
+    api.setAuthToken(data.access_token, remember);
+    api.setUser(data.user, remember);
     setUser(data.user);
   };
 

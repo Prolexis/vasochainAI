@@ -1,0 +1,2 @@
+# Asegurar que los scripts de shell siempre tengan terminación LF (Linux)
+*.sh text eol=lf

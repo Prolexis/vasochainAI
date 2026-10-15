@@ -9,4 +9,3 @@ npx prisma db seed || true
 
 echo "Iniciando backend VasoChain AI..."
 node dist/src/main.js
-

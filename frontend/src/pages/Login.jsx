@@ -20,7 +20,7 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      await authLogin(email, password);
+      await authLogin(email, password, rememberMe);
       navigate('/');
     } catch (err) {
       setError(err.message || 'Error al iniciar sesión');
@@ -292,6 +292,18 @@ export default function Login() {
               )}
             </button>
           </form>
+
+          {/* Botón de Relleno Rápido Demo */}
+          <div className="pt-2 text-center">
+            <button
+              type="button"
+              onClick={() => handleQuickFill('admin@vasochain.com', 'admin123')}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-ledger-900/80 hover:bg-ledger-800 border border-ledger-700 hover:border-emerald-500/40 text-[11px] font-mono text-paper-300 hover:text-emerald-400 transition-all cursor-pointer shadow-sm"
+            >
+              <span>⚡ Rellenar credenciales demo</span>
+              <span className="text-emerald-400 font-semibold">(admin@vasochain.com)</span>
+            </button>
+          </div>
 
           {/* Nota de Confianza bajo el botón */}
           <div className="flex items-center justify-center gap-2 text-[11px] font-mono text-paper-300/50 pt-2">

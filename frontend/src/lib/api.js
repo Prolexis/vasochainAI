@@ -13,6 +13,12 @@ const API_URL = obtenerApiUrl();
 
 async function manejarRespuesta(res) {
   if (!res.ok) {
+    if (res.status === 401) {
+      api.logout();
+      if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
+    }
     let mensaje = `Error ${res.status}`;
     try {
       const data = await res.json();
@@ -219,24 +225,56 @@ export const api = {
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
   },
 
-  setAuthToken: (token) => {
-    localStorage.setItem('token', token);
+  setAuthToken: (token, remember = true) => {
+    if (remember) {
+      localStorage.setItem('token', token);
+      sessionStorage.removeItem('token');
+    } else {
+      sessionStorage.setItem('token', token);
+      localStorage.removeItem('token');
+    }
   },
 
-  setUser: (user) => {
-    localStorage.setItem('user', JSON.stringify(user));
+  setUser: (user, remember = true) => {
+    if (remember) {
+      localStorage.setItem('user', JSON.stringify(user));
+      sessionStorage.removeItem('user');
+    } else {
+      sessionStorage.setItem('user', JSON.stringify(user));
+      localStorage.removeItem('user');
+    }
   },
 
-  getAuthToken: () => localStorage.getItem('token'),
+  getAuthToken: () => localStorage.getItem('token') || sessionStorage.getItem('token'),
 
   getUser: () => {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+    const rawUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (!rawUser) return null;
+    try {
+      const parsed = JSON.parse(rawUser);
+      const token = api.getAuthToken();
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          if (payload.exp && Date.now() >= payload.exp * 1000) {
+            api.logout();
+            return null;
+          }
+        } catch {
+          // Si el token no tiene formato JWT, continuar
+        }
+      }
+      return parsed;
+    } catch {
+      return null;
+    }
   },
 
-  isAuthenticated: () => !!localStorage.getItem('token'),
+  isAuthenticated: () => !!api.getAuthToken(),
 };
 
 function getAuthHeaders() {
