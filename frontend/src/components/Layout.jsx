@@ -160,7 +160,7 @@ export default function Layout({ children }) {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-xs text-paper-100 font-semibold truncate">{user?.nombre || 'Usuario'}</p>
-                <p className="text-[11px] text-paper-300/60 truncate">{user?.email}</p>
+                <p className="text-[10px] text-emerald-400 font-mono truncate">{user?.rol || user?.email}</p>
               </div>
             </div>
             <button

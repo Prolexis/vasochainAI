@@ -6,21 +6,39 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Iniciando seed de datos de ejemplo...');
 
-  // 0. Crear usuario admin por defecto
-  const adminEmail = 'admin@vasochain.com';
-  let adminUser = await prisma.user.findUnique({ where: { email: adminEmail } });
-  if (!adminUser) {
-    const hashedPassword = await bcrypt.hash('admin123', 10);
-    adminUser = await prisma.user.create({
-      data: {
-        email: adminEmail,
+  // 0. Crear usuarios con distintos roles del sistema
+  const usuariosSeed = [
+    {
+      email: 'admin@vasochain.com',
+      nombre: 'Supervisor Municipal',
+      rol: 'Administrador Municipal',
+    },
+    {
+      email: 'presidenta@vasochain.com',
+      nombre: 'Rosa Quispe (Presidenta)',
+      rol: 'Coordinadora de Comité',
+    },
+    {
+      email: 'auditor@vasochain.com',
+      nombre: 'Auditor de Contraloría / OCI',
+      rol: 'Auditor Fiscalizador',
+    },
+  ];
+
+  const hashedPassword = await bcrypt.hash('admin123', 10);
+  for (const u of usuariosSeed) {
+    await prisma.user.upsert({
+      where: { email: u.email },
+      update: { nombre: u.nombre, rol: u.rol },
+      create: {
+        email: u.email,
         password: hashedPassword,
-        nombre: 'Administrador VasoChain',
-        rol: 'admin',
+        nombre: u.nombre,
+        rol: u.rol,
       },
     });
-    console.log('✅ Usuario admin creado');
   }
+  console.log('✅ Usuarios de los 3 roles listos (admin123)');
 
   // 1. Crear categorías para el sistema de gestión existente (o buscar si ya existen
   const nombresCategorias = [

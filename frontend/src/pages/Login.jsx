@@ -293,16 +293,34 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Botón de Relleno Rápido Demo */}
-          <div className="pt-2 text-center">
-            <button
-              type="button"
-              onClick={() => handleQuickFill('admin@vasochain.com', 'admin123')}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-ledger-900/80 hover:bg-ledger-800 border border-ledger-700 hover:border-emerald-500/40 text-[11px] font-mono text-paper-300 hover:text-emerald-400 transition-all cursor-pointer shadow-sm"
-            >
-              <span>⚡ Rellenar credenciales demo</span>
-              <span className="text-emerald-400 font-semibold">(admin@vasochain.com)</span>
-            </button>
+          {/* Selector Rápido de Roles */}
+          <div className="pt-2 space-y-2">
+            <p className="text-[10px] uppercase tracking-wider text-paper-300/50 font-mono text-center">
+              Ingreso rápido por rol (Demo):
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
+              <button
+                type="button"
+                onClick={() => handleQuickFill('admin@vasochain.com', 'admin123')}
+                className="px-2.5 py-2 rounded-xl bg-ledger-900/90 hover:bg-ledger-800 border border-ledger-700 hover:border-emerald-500/40 text-[10px] font-mono text-paper-300 hover:text-emerald-400 transition-all text-center cursor-pointer"
+              >
+                🏛️ Supervisor
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickFill('presidenta@vasochain.com', 'admin123')}
+                className="px-2.5 py-2 rounded-xl bg-ledger-900/90 hover:bg-ledger-800 border border-ledger-700 hover:border-amber-500/40 text-[10px] font-mono text-paper-300 hover:text-amber-400 transition-all text-center cursor-pointer"
+              >
+                👩‍💼 Presidenta
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickFill('auditor@vasochain.com', 'admin123')}
+                className="px-2.5 py-2 rounded-xl bg-ledger-900/90 hover:bg-ledger-800 border border-ledger-700 hover:border-teal-500/40 text-[10px] font-mono text-paper-300 hover:text-teal-400 transition-all text-center cursor-pointer"
+              >
+                🔍 Auditor OCI
+              </button>
+            </div>
           </div>
 
           {/* Nota de Confianza bajo el botón */}
