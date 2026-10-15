@@ -25,7 +25,7 @@ export default function ModoMenu() {
       const data = await api.obtenerMenuModo();
       setMenuData(data);
     } catch (error) {
-      console.error('Error cargando menu:', error);
+      console.error('Error cargando menú:', error);
     } finally {
       setCargando(false);
     }
@@ -34,50 +34,55 @@ export default function ModoMenu() {
   async function buscarControles() {
     try {
       const data = await api.buscarControles(busqueda);
-      setResultados(data);
+      setResultados(data || []);
     } catch (error) {
-      console.error('Error buscando:', error);
+      console.error('Error en búsqueda de controles:', error);
     }
   }
 
   if (cargando) {
     return (
-      <div className="flex items-center justify-center min-h-[70vh]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-20 w-20 border-4 border-confirm-400 border-t-transparent mx-auto mb-8"></div>
-          <p className="text-paper-300/60 text-lg font-mono">Preparando modo menú…</p>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
+        <div className="w-10 h-10 border-3 border-confirm-400 border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-sm text-paper-300/60 font-mono">Cargando catálogo de controles…</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-12 min-h-screen" role="main" aria-labelledby="menu-title">
-      <div className="text-center py-10">
-        <h1 id="menu-title" className="text-5xl font-display font-bold gradient-text mb-4">
-          🎯 Modo Menú
-        </h1>
-        <p className="text-paper-300/60 text-lg">
-          Acceso rápido y estructurado a todos tus controles operativos
-        </p>
+    <div className="space-y-8 max-w-6xl mx-auto">
+      {/* Header Institucional */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-ledger-700/60">
+        <div>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="px-2.5 py-0.5 rounded-md text-[11px] font-mono font-medium tracking-wide bg-confirm-500/15 text-confirm-400 border border-confirm-500/25">
+              CATÁLOGO RÁPIDO
+            </span>
+            <span className="text-xs text-paper-300/50">· Búsqueda y consulta</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-display font-bold text-paper-100 tracking-tight">
+            Modo Menú de Controles
+          </h1>
+          <p className="text-sm text-paper-300/70 mt-1">
+            Búsqueda directa, acceso rápido y consulta detallada de controles operativos
+          </p>
+        </div>
       </div>
 
-      <div className="max-w-4xl mx-auto" role="search">
-        <label htmlFor="busqueda-controles" className="sr-only">
-          Buscar controles por identificador o descripción
-        </label>
+      {/* Barra de Búsqueda simple y estilizada */}
+      <div className="relative">
         <div className="relative">
-          <div className="absolute inset-y-0 left-8 flex items-center pointer-events-none">
-            <span className="text-3xl">🔍</span>
+          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-paper-400">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
           </div>
           <input
-            id="busqueda-controles"
             type="search"
-            placeholder="Busca cualquier control..."
+            placeholder="Buscar por código (ej. CTRL-001) o palabras clave en la descripción…"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
-            className="w-full bg-gradient-to-r from-ledger-900 to-ledger-950 border-2 border-ledger-600 rounded-[32px] px-24 py-7 text-paper-200 text-xl focus:outline-none focus:border-confirm-400 focus:ring-8 focus:ring-confirm-400/20 transition-all duration-300 shadow-soft-xl"
-            aria-label="Buscar controles"
+            className="w-full bg-ledger-900 border border-ledger-700 rounded-xl pl-12 pr-10 py-3 text-sm text-paper-100 placeholder:text-paper-400/50 focus:outline-none focus:border-confirm-400 focus:ring-2 focus:ring-confirm-400/20 transition-colors"
           />
           {busqueda && (
             <button
@@ -85,22 +90,21 @@ export default function ModoMenu() {
                 setBusqueda('');
                 setResultados([]);
               }}
-              className="absolute inset-y-0 right-8 flex items-center text-paper-400 hover:text-paper-200 transition-colors duration-300"
+              className="absolute inset-y-0 right-3 flex items-center text-paper-400 hover:text-paper-200"
               aria-label="Limpiar búsqueda"
             >
-              <span className="text-3xl">✕</span>
+              ✕
             </button>
           )}
         </div>
 
+        {/* Resultados de búsqueda */}
         {resultados.length > 0 && (
-          <div className="mt-6 glass-card glass-border rounded-3xl shadow-soft-xl overflow-hidden">
-            <div className="p-6 border-b border-ledger-700 bg-ledger-950/30">
-              <p className="text-paper-400 text-base font-mono">
-                📋 {resultados.length} resultado{resultados.length !== 1 ? 's' : ''} encontrado{resultados.length !== 1 ? 's' : ''}
-              </p>
+          <div className="mt-3 bg-ledger-900 border border-ledger-700 rounded-xl shadow-xl overflow-hidden divide-y divide-ledger-800">
+            <div className="px-4 py-2.5 bg-ledger-950/60 text-xs font-mono text-paper-300/60">
+              {resultados.length} resultado{resultados.length !== 1 ? 's' : ''} encontrado{resultados.length !== 1 ? 's' : ''}
             </div>
-            <div className="max-h-[500px] overflow-y-auto scroll-thin">
+            <div className="max-h-72 overflow-y-auto">
               {resultados.map((control) => (
                 <button
                   key={control.id}
@@ -109,29 +113,21 @@ export default function ModoMenu() {
                     setBusqueda('');
                     setResultados([]);
                   }}
-                  className="w-full text-left px-8 py-6 hover:bg-ledger-800/60 border-b border-ledger-700/50 last:border-0 transition-all duration-300 group"
+                  className="w-full text-left px-4 py-3 hover:bg-ledger-800/60 transition-colors flex items-center justify-between gap-4 text-xs group"
                 >
-                  <div className="flex items-start justify-between gap-6">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-3">
-                        <span className="font-mono text-2xl font-bold text-emerald-400">
-                          {control.identificador}
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-mono font-bold text-confirm-400">{control.identificador}</span>
+                      {control.esFrecuente && (
+                        <span className="px-1.5 py-0.5 rounded text-[10px] bg-amber-500/15 text-amber-300 font-mono">
+                          Frecuente
                         </span>
-                        {control.esFrecuente && (
-                          <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-400/30">
-                            ⭐ Frecuente
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-paper-200 text-lg leading-relaxed">{control.descripcion}</p>
-                      <p className="text-paper-400 text-sm mt-3">
-                        📁 {control.categoria?.nombre || 'Sin categoría'}
-                      </p>
+                      )}
+                      <span className="text-[11px] text-paper-300/50 font-mono">· {control.categoria?.nombre || 'General'}</span>
                     </div>
-                    <span className="text-paper-500 group-hover:text-emerald-400 transition-colors duration-300 text-4xl">
-                      →
-                    </span>
+                    <p className="text-paper-200 truncate">{control.descripcion}</p>
                   </div>
+                  <span className="text-paper-400 group-hover:text-confirm-400 font-mono shrink-0">Ver →</span>
                 </button>
               ))}
             </div>
@@ -139,176 +135,135 @@ export default function ModoMenu() {
         )}
       </div>
 
-      {controlSeleccionado && (
-        <div
-          className="fixed inset-0 bg-ledger-950/70 backdrop-blur-3xl flex items-center justify-center px-8 z-50"
-          onClick={() => setControlSeleccionado(null)}
-        >
-          <div
-            className="glass-card glass-border rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-soft-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-10">
-              <div className="flex items-start justify-between gap-8 mb-8">
-                <div>
-                  <div className="flex items-center gap-4 mb-5">
-                    <span className="font-mono text-2xl font-bold text-emerald-400">
-                      {controlSeleccionado.identificador}
-                    </span>
-                    {controlSeleccionado.esFrecuente && (
-                      <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-400/30">
-                        ⭐ Frecuente
-                      </span>
-                    )}
-                  </div>
-                  <h2 id="modal-title" className="text-3xl font-display font-semibold text-paper-100 mb-4">
-                    {controlSeleccionado.descripcion}
-                  </h2>
-                  <p className="text-paper-400 text-lg">
-                    📁 {controlSeleccionado.categoria?.nombre || 'Sin categoría'}
-                  </p>
-                </div>
-                <button
-                  onClick={() => setControlSeleccionado(null)}
-                  className="text-paper-400 hover:text-paper-200 hover:bg-ledger-800/50 p-4 rounded-2xl transition-all duration-300"
-                  aria-label="Cerrar"
-                >
-                  <span className="text-3xl">✕</span>
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                {controlSeleccionado.dependencias && (
-                  <div className="bg-ledger-950/40 p-6 rounded-3xl border border-ledger-700">
-                    <h4 className="text-paper-300 text-sm font-bold uppercase tracking-wider mb-4 flex items-center gap-3">
-                      🔗 Dependencias
-                    </h4>
-                    <pre className="text-paper-300 text-sm whitespace-pre-wrap font-mono">
-                      {JSON.stringify(controlSeleccionado.dependencias, null, 2)}
-                    </pre>
-                  </div>
-                )}
-
-                {controlSeleccionado.requerimientosAcceso && (
-                  <div className="bg-ledger-950/40 p-6 rounded-3xl border border-ledger-700">
-                    <h4 className="text-paper-300 text-sm font-bold uppercase tracking-wider mb-4 flex items-center gap-3">
-                      🔐 Requerimientos de Acceso
-                    </h4>
-                    <pre className="text-paper-300 text-sm whitespace-pre-wrap font-mono">
-                      {JSON.stringify(controlSeleccionado.requerimientosAcceso, null, 2)}
-                    </pre>
-                  </div>
-                )}
-
-                {controlSeleccionado.objetivosAlineados && (
-                  <div className="bg-ledger-950/40 p-6 rounded-3xl border border-ledger-700">
-                    <h4 className="text-paper-300 text-sm font-bold uppercase tracking-wider mb-4 flex items-center gap-3">
-                      🎯 Objetivos Alineados
-                    </h4>
-                    <pre className="text-paper-300 text-sm whitespace-pre-wrap font-mono">
-                      {JSON.stringify(controlSeleccionado.objetivosAlineados, null, 2)}
-                    </pre>
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-10 flex gap-5">
-                <button
-                  onClick={() => setControlSeleccionado(null)}
-                  className="flex-1 bg-ledger-700 hover:bg-ledger-600 text-paper-200 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover-lift"
-                >
-                  Cerrar
-                </button>
-              </div>
+      {/* Controles de Uso Frecuente */}
+      {menuData?.frecuentes && menuData.frecuentes.length > 0 && (
+        <div className="rounded-2xl bg-ledger-900/60 border border-ledger-700/60 p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-amber-400">★</span>
+              <h2 className="text-sm font-semibold text-paper-100">Controles de Uso Frecuente</h2>
             </div>
+            <span className="text-xs font-mono text-paper-300/50">{menuData.frecuentes.length} controles</span>
           </div>
-        </div>
-      )}
 
-      {menuData?.frecuentes?.length > 0 && (
-        <div className="glass-card glass-border rounded-3xl p-10 shadow-soft-xl" style={{background: 'linear-gradient(135deg, rgba(202, 138, 4, 0.1), rgba(180, 83, 9, 0.05))', borderColor: 'rgba(202, 138, 4, 0.3)'}}>
-          <h2 className="text-3xl font-display font-semibold text-amber-200 mb-8 flex items-center gap-4">
-            ⭐ Controles de Uso Frecuente
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {menuData.frecuentes.map((control) => (
               <button
                 key={control.id}
                 onClick={() => setControlSeleccionado(control)}
-                className="group bg-ledger-900/70 border border-ledger-700 rounded-3xl p-8 text-left hover:border-amber-400/50 hover:shadow-2xl hover:shadow-amber-500/10 hover:bg-ledger-850/80 transition-all duration-300 focus:outline-none focus:ring-8 focus:ring-amber-400/20 hover-lift"
+                className="rounded-xl p-3.5 bg-ledger-950/70 border border-ledger-700/70 hover:border-amber-400/40 text-left transition-all hover:bg-ledger-900 group"
               >
-                <span className="font-mono text-lg font-bold text-amber-400">
-                  {control.identificador}
-                </span>
-                <p className="text-paper-200 text-lg mt-4 leading-relaxed line-clamp-2">
-                  {control.descripcion}
-                </p>
-                <p className="text-paper-400 text-sm mt-5">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="font-mono text-xs font-bold text-amber-400">{control.identificador}</span>
+                  <span className="text-[10px] text-paper-300/50 group-hover:text-amber-300">Detalles →</span>
+                </div>
+                <p className="text-xs text-paper-200 line-clamp-2 leading-relaxed">{control.descripcion}</p>
+                <p className="text-[11px] text-paper-300/50 font-mono mt-2">
                   {control.categoria?.nombre || 'Sin categoría'}
                 </p>
-                <div className="mt-6 text-amber-400/70 text-sm group-hover:text-amber-300 transition-colors duration-300 flex items-center gap-2">
-                  Ver detalles →
-                </div>
               </button>
             ))}
           </div>
         </div>
       )}
 
-      <div className="space-y-12">
-        {menuData?.categorias?.map((categoria) =>
-          categoria.controls?.length > 0 && (
-            <section key={categoria.id} aria-labelledby={`categoria-${categoria.id}`}>
-              <h2 id={`categoria-${categoria.id}`} className="text-3xl font-display font-semibold text-paper-200 mb-8 pb-4 border-b border-ledger-700">
-                📁 {categoria.nombre}
-              </h2>
-              {categoria.descripcion && (
-                <p className="text-paper-400 text-lg mb-8">{categoria.descripcion}</p>
-              )}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {categoria.controls.map((control) => (
-                  <button
-                    key={control.id}
-                    onClick={() => setControlSeleccionado(control)}
-                    className="group glass-card glass-border rounded-3xl p-8 text-left hover:border-emerald-400/50 hover:shadow-2xl hover:shadow-emerald-500/10 hover:bg-ledger-850/70 transition-all duration-300 focus:outline-none focus:ring-8 focus:ring-emerald-400/20 hover-lift"
-                  >
-                    <div className="flex items-start justify-between gap-4 mb-4">
-                      <span className="font-mono text-lg font-bold text-emerald-400">
-                        {control.identificador}
-                      </span>
-                      {control.esFrecuente && (
-                        <span className="text-amber-400 text-xl">⭐</span>
-                      )}
-                    </div>
-                    <p className="text-paper-200 text-lg leading-relaxed line-clamp-3">
-                      {control.descripcion}
-                    </p>
-                    <div className="mt-6 text-emerald-400/70 text-sm group-hover:text-emerald-300 transition-colors duration-300 flex items-center gap-2">
-                      Ver detalles →
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </section>
-          )
-        )}
-      </div>
+      {/* Categorías de Controles */}
+      {menuData?.categorias && menuData.categorias.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-sm font-semibold text-paper-200 uppercase tracking-wider font-mono">
+            Controles por Categoría ({menuData.categorias.length})
+          </h2>
 
-      {!menuData?.categorias?.some((c) => c.controls?.length > 0) && !busqueda && (
-        <div className="text-center py-20 glass-card glass-border rounded-3xl">
-          <div className="text-8xl mb-8">📭</div>
-          <h3 className="text-3xl font-semibold text-paper-200 mb-6">
-            No hay controles disponibles
-          </h3>
-          <p className="text-paper-400 text-lg mb-10 max-w-2xl mx-auto">
-            Ve a la sección de Gestión de Controles para crear tus primeros controles
-          </p>
-          <a
-            href="/controles"
-            className="inline-flex items-center gap-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white px-10 py-5 rounded-2xl font-semibold text-xl transition-all duration-300 shadow-xl hover-lift"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {menuData.categorias.map((cat) => (
+              <div key={cat.id} className="rounded-2xl bg-ledger-900/60 border border-ledger-700/60 p-5 space-y-3">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="text-sm font-semibold text-paper-100">{cat.nombre}</h3>
+                    {cat.descripcion && <p className="text-xs text-paper-300/60 mt-0.5">{cat.descripcion}</p>}
+                  </div>
+                  <span className="text-xs font-mono text-paper-300/50 bg-ledger-800 px-2 py-0.5 rounded">
+                    {cat.controles?.length || 0}
+                  </span>
+                </div>
+
+                <div className="space-y-1.5 pt-2">
+                  {cat.controles && cat.controles.length > 0 ? (
+                    cat.controles.slice(0, 4).map((c) => (
+                      <button
+                        key={c.id}
+                        onClick={() => setControlSeleccionado({ ...c, categoria: cat })}
+                        className="w-full text-left px-3 py-2 rounded-lg bg-ledger-950/50 hover:bg-ledger-800/60 border border-ledger-800/60 text-xs flex items-center justify-between group transition-colors"
+                      >
+                        <div className="truncate mr-2">
+                          <span className="font-mono font-bold text-confirm-400 mr-2">{c.identificador}</span>
+                          <span className="text-paper-300/80">{c.descripcion}</span>
+                        </div>
+                        <span className="text-paper-400 group-hover:text-confirm-400 font-mono text-[11px]">→</span>
+                      </button>
+                    ))
+                  ) : (
+                    <p className="text-xs text-paper-300/40 italic">Sin controles registrados</p>
+                  )}
+                  {cat.controles && cat.controles.length > 4 && (
+                    <p className="text-[11px] font-mono text-paper-300/50 text-right pt-1">
+                      +{cat.controles.length - 4} controles adicionales
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Detalle de Control */}
+      {controlSeleccionado && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          onClick={() => setControlSeleccionado(null)}
+        >
+          <div
+            className="bg-ledger-900 border border-ledger-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4"
+            onClick={(e) => e.stopPropagation()}
           >
-            ⚙️ Ir a Gestión de Controles
-          </a>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <span className="font-mono text-xs font-bold text-confirm-400">
+                  {controlSeleccionado.identificador}
+                </span>
+                <h3 className="text-base font-semibold text-paper-100 mt-1">
+                  {controlSeleccionado.descripcion}
+                </h3>
+                <p className="text-xs text-paper-300/60 mt-1 font-mono">
+                  Categoría: {controlSeleccionado.categoria?.nombre || 'General'}
+                </p>
+              </div>
+              <button
+                onClick={() => setControlSeleccionado(null)}
+                className="text-paper-400 hover:text-paper-100 text-sm p-1"
+                aria-label="Cerrar modal"
+              >
+                ✕
+              </button>
+            </div>
+
+            {controlSeleccionado.dependencias && (
+              <div className="p-3 bg-ledger-950/70 rounded-xl border border-ledger-800 text-xs">
+                <p className="text-[11px] font-mono uppercase text-paper-300/50 mb-1">Dependencias</p>
+                <p className="text-paper-300">{JSON.stringify(controlSeleccionado.dependencias)}</p>
+              </div>
+            )}
+
+            <div className="pt-2 flex justify-end">
+              <button
+                onClick={() => setControlSeleccionado(null)}
+                className="px-4 py-2 rounded-xl bg-ledger-800 hover:bg-ledger-700 text-paper-200 text-xs font-medium transition-colors"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

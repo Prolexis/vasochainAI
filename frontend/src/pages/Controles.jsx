@@ -21,10 +21,12 @@ const BadgeEstado = ({ estado }) => {
 };
 
 const TarjetaKPI = ({ icono, valor, etiqueta, color }) => (
-  <div className="glass-card glass-border p-8 rounded-3xl shadow-soft-xl hover-lift">
-    <div className="text-5xl mb-4">{icono}</div>
-    <div className={`text-5xl font-display font-bold mb-2 ${color}`}>{valor}</div>
-    <div className="text-paper-400 text-lg">{etiqueta}</div>
+  <div className="rounded-2xl bg-ledger-900 border border-ledger-700/60 p-4">
+    <div className="flex items-center justify-between text-xs text-paper-300/60 font-mono mb-2">
+      <span className="uppercase tracking-wider">{etiqueta}</span>
+      <span>{icono}</span>
+    </div>
+    <div className={`text-2xl md:text-3xl font-display font-bold font-mono ${color}`}>{valor}</div>
   </div>
 );
 
@@ -186,30 +188,37 @@ export default function Controles() {
   }
 
   return (
-    <div className="space-y-10">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div className="space-y-8 max-w-7xl mx-auto">
+      {/* Header Institucional */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-ledger-700/60">
         <div>
-          <h1 className="text-5xl font-display font-bold gradient-text flex items-center gap-4">
-            ⚙️ Sistema de Gestión de Controles
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="px-2.5 py-0.5 rounded-md text-[11px] font-mono font-medium tracking-wide bg-confirm-500/15 text-confirm-400 border border-confirm-500/25">
+              NORMATIVA & CALIDAD
+            </span>
+            <span className="text-xs text-paper-300/50">· Matriz Operativa</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-display font-bold text-paper-100 tracking-tight">
+            Gestión de Controles
           </h1>
-          <p className="text-paper-400 mt-3 text-xl">
-            Administra, valida y despliega controles operativos de forma estructurada
+          <p className="text-sm text-paper-300/70 mt-1">
+            Administración, validación y despliegue de reglas operativas
           </p>
         </div>
 
-        <div className="flex bg-ledger-800/60 p-2.5 rounded-3xl glass-border">
+        <div className="flex bg-ledger-900 p-1 rounded-xl border border-ledger-700/60">
           {[
-            { id: 'lista', label: '📋 Lista', icon: '📋' },
-            { id: 'importar', label: '📥 Importar', icon: '📥' },
-            { id: 'descartados', label: '🗑️ Descartados', icon: '🗑️' },
+            { id: 'lista', label: 'Lista' },
+            { id: 'importar', label: 'Importar' },
+            { id: 'descartados', label: 'Descartados' },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setVista(tab.id)}
-              className={`px-7 py-4 rounded-2xl text-sm font-bold transition-all duration-300 ${
+              className={`px-4 py-1.5 rounded-lg text-xs font-mono transition-colors ${
                 vista === tab.id
-                  ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-xl'
-                  : 'text-paper-400 hover:text-paper-200 hover:bg-ledger-700/60'
+                  ? 'bg-confirm-500/20 text-confirm-300 border border-confirm-500/30'
+                  : 'text-paper-300/70 hover:text-paper-100'
               }`}
             >
               {tab.label}
@@ -221,30 +230,30 @@ export default function Controles() {
       {mostrarMensaje()}
 
       {informe && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <TarjetaKPI
             icono="📊"
             valor={informe.totalInicial}
-            etiqueta="Total de Controles"
-            color="text-blue-300"
+            etiqueta="Total Inicial"
+            color="text-blue-400"
           />
           <TarjetaKPI
             icono="✅"
             valor={informe.validados}
-            etiqueta="Controles Activos"
-            color="text-emerald-300"
+            etiqueta="Activos"
+            color="text-confirm-400"
           />
           <TarjetaKPI
             icono="🗑️"
             valor={informe.descartados}
-            etiqueta="Controles Descartados"
-            color="text-amber-300"
+            etiqueta="Descartados"
+            color="text-amber-400"
           />
           <TarjetaKPI
             icono="📉"
             valor={informe.reduccionPorcentaje + '%'}
-            etiqueta="Reducción Operativa"
-            color="text-purple-300"
+            etiqueta="Optimización"
+            color="text-purple-400"
           />
         </div>
       )}
