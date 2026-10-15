@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTheme } from '../lib/theme';
 import { useAuth } from '../lib/auth';
+import { tieneAccesoRuta } from '../lib/permissions';
 
 const enlaces = [
   { to: '/', label: 'Panel general', folio: '01' },
@@ -18,6 +19,10 @@ export default function Layout({ children }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const enlacesAutorizados = enlaces.filter((enlace) =>
+    tieneAccesoRuta(user?.rol, enlace.to),
+  );
 
   const handleLogout = () => {
     logout();
@@ -131,7 +136,7 @@ export default function Layout({ children }) {
         </div>
 
         <nav className="flex-1 px-4 lg:px-6 py-6 space-y-1.5 overflow-y-auto">
-          {enlaces.map((enlace) => (
+          {enlacesAutorizados.map((enlace) => (
             <NavLink
               key={enlace.to}
               to={enlace.to}
