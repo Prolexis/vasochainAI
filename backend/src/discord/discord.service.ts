@@ -40,6 +40,8 @@ export class DiscordService implements OnModuleInit, OnModuleDestroy {
     this.botToken = this.config.get<string>('DISCORD_BOT_TOKEN') || '';
   }
 
+  private readonly userChannels = new Map<string, string>();
+
   onModuleInit() {
     if (!this.botToken) {
       this.logger.warn(
@@ -63,10 +65,10 @@ export class DiscordService implements OnModuleInit, OnModuleDestroy {
         this.logger.log(`Discord Bot en línea como: ${this.client?.user?.tag}`);
       });
 
-      // Mensajes de texto / fotos en DM
+      // Mensajes de texto / fotos (en canales del servidor o DM)
       this.client.on('messageCreate', async (message) => {
         if (message.author.bot) return;
-        if (message.channel.type !== ChannelType.DM) return;
+        this.userChannels.set(message.author.id, message.channel.id);
         await this.procesarMensaje(message).catch((err) =>
           this.logger.error(`Error procesando mensaje Discord: ${err.message}`),
         );
@@ -75,7 +77,9 @@ export class DiscordService implements OnModuleInit, OnModuleDestroy {
       // Botones (ButtonInteraction)
       this.client.on('interactionCreate', async (interaction) => {
         if (!interaction.isButton()) return;
-        if ((interaction.channel as any)?.type !== ChannelType.DM) return;
+        if (interaction.channelId) {
+          this.userChannels.set(interaction.user.id, interaction.channelId);
+        }
         await this.manejarBoton(interaction).catch((err) =>
           this.logger.error(`Error procesando botón Discord: ${err.message}`),
         );
@@ -120,10 +124,20 @@ export class DiscordService implements OnModuleInit, OnModuleDestroy {
   private async enviarDM(userId: string, contenido: any): Promise<void> {
     if (!this.client) return;
     try {
+      // Try to send in the same channel the user wrote in
+      const channelId = this.userChannels.get(userId);
+      if (channelId) {
+        const channel = await this.client.channels.fetch(channelId);
+        if (channel && 'send' in channel) {
+          await (channel as any).send(contenido);
+          return;
+        }
+      }
+      // Fallback to DM
       const user = await this.client.users.fetch(userId);
       if (user) await user.send(contenido);
     } catch (error) {
-      this.logger.error(`Error enviando DM a ${userId}: ${error.message}`);
+      this.logger.error(`Error enviando mensaje Discord a ${userId}: ${error.message}`);
     }
   }
 

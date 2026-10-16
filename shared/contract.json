@@ -1,5 +1,5 @@
 {
-  "address": "0x53d27eF9b17a06573fb65eC876090F9641817A22",
+  "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
   "abi": [
     {
       "anonymous": false,
@@ -151,5 +151,5 @@
       "type": "function"
     }
   ],
-  "deployedAt": "2026-10-16T01:22:41.319Z"
+  "deployedAt": "2026-10-16T02:20:03.016Z"
 }
