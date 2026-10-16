@@ -3,6 +3,8 @@ node_modules/
 
 # Variables de entorno reales (nunca subir credenciales)
 .env
+.env.*
+**/.env
 
 # Build outputs
 backend/dist/
