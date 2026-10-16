@@ -3,6 +3,8 @@ import BadgeEstado from '../components/BadgeEstado';
 import BadgeOrigen from '../components/BadgeOrigen';
 import { api } from '../lib/api';
 import { usePolling } from '../lib/usePolling';
+import { sound } from '../lib/sound';
+
 
 function formatearFecha(fecha) {
   return new Date(fecha).toLocaleString('es-PE', {
@@ -55,7 +57,10 @@ export default function Entregas() {
                   {(entregas || []).map((entrega) => (
                     <tr
                       key={entrega.id}
-                      onClick={() => setSeleccionada(entrega)}
+                      onClick={() => {
+                        sound.playClick();
+                        setSeleccionada(entrega);
+                      }}
                       className={`border-t border-ledger-700/60 hover:bg-ledger-800/60 transition-colors cursor-pointer ${
                         seleccionada?.id === entrega.id ? 'bg-ledger-800/70' : ''
                       }`}
@@ -138,17 +143,29 @@ function DetalleEntrega({ entrega }) {
         </div>
       )}
 
-      <div className="rounded-2xl bg-confirm-500/10 border border-confirm-500/25 p-5">
-        <p className="text-[11px] uppercase tracking-[0.12em] text-confirm-400 font-mono mb-2">
-          Sello de cadena
-        </p>
+      <div className={`rounded-2xl border p-5 transition-all ${
+        entrega.txHash
+          ? 'bg-confirm-500/10 border-confirm-500/40 animate-glow-green'
+          : 'bg-ledger-950/40 border-ledger-800'
+      }`}>
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-[11px] uppercase tracking-[0.12em] text-confirm-400 font-mono">
+            Sello de cadena
+          </p>
+          {entrega.txHash && (
+            <span className="flex items-center gap-1.5 text-[10px] font-mono text-confirm-400">
+              <span className="w-2 h-2 rounded-full bg-confirm-400 animate-ping" />
+              CONFIRMADO
+            </span>
+          )}
+        </div>
         {entrega.txHash ? (
           <>
             <p className="text-xs font-mono break-all text-paper-200">
               {entrega.txHash}
             </p>
-            <p className="text-xs text-paper-300/50 mt-2">
-              Transacción confirmada en el nodo local de la red.
+            <p className="text-xs text-paper-300/60 mt-2">
+              Transacción sellada e inmutable en el bloque de la red.
             </p>
           </>
         ) : (

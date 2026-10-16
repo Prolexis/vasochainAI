@@ -3,6 +3,7 @@ import { api } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import { usePolling } from '../lib/usePolling';
 import { obtenerRolNormalizado, ROLES } from '../lib/permissions';
+import { sound } from '../lib/sound';
 
 export default function Beneficiarios() {
   const { user } = useAuth();
@@ -49,6 +50,7 @@ export default function Beneficiarios() {
         sector: formulario.sector.trim(),
       });
 
+      sound.playSuccess();
       setFormulario({
         nombreMenor: '',
         dniMenor: '',
@@ -291,7 +293,10 @@ export default function Beneficiarios() {
 
                     <div className="flex items-center gap-2 shrink-0">
                       <button
-                        onClick={() => setQrSeleccionado(b)}
+                        onClick={() => {
+                          sound.playScan();
+                          setQrSeleccionado(b);
+                        }}
                         className="text-xs px-3 py-1.5 rounded-lg border border-ledger-600 hover:border-confirm-400 text-paper-200 hover:text-confirm-300 transition-colors"
                       >
                         Ver QR
@@ -321,11 +326,11 @@ export default function Beneficiarios() {
         const info = parsearBeneficiario(qrSeleccionado.nombre);
         return (
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
             onClick={() => setQrSeleccionado(null)}
           >
             <div
-              className="bg-ledger-900 border border-ledger-700 rounded-2xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl"
+              className="bg-ledger-900 border border-ledger-700 rounded-2xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl animate-pop"
               onClick={(e) => e.stopPropagation()}
             >
               <div>

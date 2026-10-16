@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useTheme } from '../lib/theme';
 import { useAuth } from '../lib/auth';
 import { tieneAccesoRuta } from '../lib/permissions';
+import { sound } from '../lib/sound';
 
 const enlaces = [
   { to: '/', label: 'Panel general', folio: '01' },
@@ -19,6 +20,12 @@ export default function Layout({ children }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(sound.isSoundEnabled());
+
+  const handleToggleSound = () => {
+    const nuevo = sound.toggleSound();
+    setSoundEnabled(nuevo);
+  };
 
   const enlacesAutorizados = enlaces.filter((enlace) =>
     tieneAccesoRuta(user?.rol, enlace.to),
@@ -64,6 +71,24 @@ export default function Layout({ children }) {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Botón sonido móvil */}
+          <button
+            onClick={handleToggleSound}
+            className="p-2 rounded-xl border border-ledger-700 bg-ledger-950/60 text-paper-100"
+            title={soundEnabled ? 'Silenciar efectos' : 'Activar efectos de sonido'}
+          >
+            {soundEnabled ? (
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-confirm-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-paper-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+              </svg>
+            )}
+          </button>
+
           <button
             onClick={toggleTheme}
             className="p-2 rounded-xl border border-ledger-700 bg-ledger-950/60 text-paper-100"
@@ -117,22 +142,42 @@ export default function Layout({ children }) {
             </div>
           </div>
 
-          <button
-            onClick={toggleTheme}
-            className="hidden lg:flex p-2.5 rounded-2xl border border-ledger-600 bg-ledger-950/50 hover:bg-ledger-800/80 hover:border-confirm-400/30 transition-all"
-            aria-label={`Cambiar a modo ${theme === 'dark' ? 'claro' : 'oscuro'}`}
-          >
-            {theme === 'dark' ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-seal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="5" />
-                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-confirm-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z" />
-              </svg>
-            )}
-          </button>
+          <div className="hidden lg:flex items-center gap-2">
+            {/* Botón sonido escritorio */}
+            <button
+              onClick={handleToggleSound}
+              className="p-2.5 rounded-2xl border border-ledger-600 bg-ledger-950/50 hover:bg-ledger-800/80 hover:border-confirm-400/30 transition-all"
+              title={soundEnabled ? 'Silenciar efectos (Audio activo)' : 'Activar efectos de sonido'}
+            >
+              {soundEnabled ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-confirm-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-paper-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                </svg>
+              )}
+            </button>
+
+            <button
+              onClick={toggleTheme}
+              className="p-2.5 rounded-2xl border border-ledger-600 bg-ledger-950/50 hover:bg-ledger-800/80 hover:border-confirm-400/30 transition-all"
+              aria-label={`Cambiar a modo ${theme === 'dark' ? 'claro' : 'oscuro'}`}
+            >
+              {theme === 'dark' ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-seal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="5" />
+                  <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-confirm-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
 
         <nav className="flex-1 px-4 lg:px-6 py-6 space-y-1.5 overflow-y-auto">
@@ -140,7 +185,10 @@ export default function Layout({ children }) {
             <NavLink
               key={enlace.to}
               to={enlace.to}
-              onClick={closeMenu}
+              onClick={() => {
+                sound.playClick();
+                closeMenu();
+              }}
               className={({ isActive }) =>
                 `group flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm transition-all border border-transparent ${
                   isActive

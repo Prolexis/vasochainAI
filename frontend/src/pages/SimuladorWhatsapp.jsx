@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../lib/api';
+import { sound } from '../lib/sound';
 
 const ESTADOS_FLUJO = {
   INICIAL: 'inicial',
@@ -197,6 +198,7 @@ export default function SimuladorWhatsapp() {
   };
 
   const simularLecturaQrMock = () => {
+    sound.playScan();
     const benef = beneficiarios.find(b => b.id === beneficiarioId);
     if (!benef) return;
 
@@ -269,6 +271,7 @@ export default function SimuladorWhatsapp() {
 
       let mensajeFinal = '';
       if (entrega.estado === 'VALIDADA') {
+        sound.playSuccess();
         if (canal === CANALES.TELEGRAM) {
           mensajeFinal = `✅ <b>Entrega Validada Exitosamente</b>\n\n` +
             `¡Excelente, <b>${nombreBenef}</b>! ${saludo}.\n\nLa evidencia de alimentos ha sido procesada y aprobada correctamente por nuestro pipeline de control digital.\n\n` +
@@ -298,6 +301,7 @@ export default function SimuladorWhatsapp() {
             `¡Gracias por registrar tu entrega en *VasoChain AI*! 🥛✨`;
         }
       } else {
+        sound.playWarning();
         if (canal === CANALES.TELEGRAM) {
           mensajeFinal = `❌ <b>Observación en la Entrega</b>\n\n` +
             `Hola <b>${nombreBenef}</b>, ${saludo.toLowerCase()}. La evidencia fotográfica enviada no logró pasar todas las verificaciones automáticas de seguridad.\n\n` +
