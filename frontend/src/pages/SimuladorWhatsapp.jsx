@@ -849,6 +849,19 @@ function BurbujaMensaje({ msg, canal, onOpcionClick }) {
             {formatearMensajeCanal(msg.texto, canal)}
           </p>
         )}
+        {msg.meta?.entrega?.txHash && (
+          <div className="mt-3 pt-2.5 border-t border-ledger-700/60 flex items-center justify-between">
+            <span className="text-[10px] font-mono text-confirm-400">🔗 zkTanenbaum</span>
+            <a
+              href={`https://explorer.tanenbaum.io/tx/${msg.meta.entrega.txHash}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[11px] font-mono text-confirm-400 hover:text-confirm-300 underline flex items-center gap-1 font-semibold"
+            >
+              Ver en Explorer ↗
+            </a>
+          </div>
+        )}
         {msg.opciones && (
           <div className="mt-3.5 flex flex-wrap gap-2">
             {msg.opciones.map((opc) => {

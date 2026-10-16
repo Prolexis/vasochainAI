@@ -164,9 +164,19 @@ function DetalleEntrega({ entrega }) {
             <p className="text-xs font-mono break-all text-paper-200">
               {entrega.txHash}
             </p>
-            <p className="text-xs text-paper-300/60 mt-2">
-              Transacción sellada e inmutable en el bloque de la red.
-            </p>
+            <div className="flex items-center justify-between mt-2.5">
+              <span className="text-xs text-paper-300/60">
+                Transacción sellada e inmutable en la red zkSYS.
+              </span>
+              <a
+                href={`https://explorer.tanenbaum.io/tx/${entrega.txHash}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 text-xs text-confirm-400 hover:text-confirm-300 font-mono underline decoration-dotted"
+              >
+                Ver en Explorer ↗
+              </a>
+            </div>
           </>
         ) : (
           <p className="text-sm text-seal-400">
